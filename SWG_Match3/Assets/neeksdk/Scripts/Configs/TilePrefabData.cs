@@ -9,6 +9,6 @@ namespace neeksdk.Scripts.Configs
     {
         public string Name;
         public TileType Type;
-        public Sprite Sprite;
+        public GameObject TilePrefab;
     }
 }

@@ -12,6 +12,6 @@ namespace neeksdk.Scripts.Game.Board.BoardBackgrounds
             _backgroundType = backgroundType;
 
         public bool CanPlaceTile() =>
-            _backgroundType == BackgroundType.Standard;
+            _backgroundType != BackgroundType.Empty;
     }
 }

@@ -9,6 +9,6 @@ namespace neeksdk.Scripts.Configs
     {
         public string Name;
         public BackgroundType Type;
-        public Color Color;
+        public GameObject TilePrefab;
     }
 }

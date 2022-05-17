@@ -1,13 +1,19 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using neeksdk.Scripts.Infrastructure.Factory;
+using neeksdk.Scripts.Infrastructure.Pool;
 using neeksdk.Scripts.Infrastructure.States;
+using neeksdk.Scripts.StaticData;
+using UnityEngine;
 using Zenject;
 
 namespace neeksdk.Scripts.Infrastructure.DIInstallers
 {
     public class DiMonoInstaller : MonoInstaller<DiMonoInstaller>, IInitializable
     {
+        [SerializeField] private ObjectPool _objectPool;
+        
         public override void InstallBindings()
         {
             Container.BindInterfacesAndSelfTo<DiMonoInstaller>().FromInstance(this).AsSingle();
@@ -20,7 +26,18 @@ namespace neeksdk.Scripts.Infrastructure.DIInstallers
 
         private void BindServices()
         {
+            BindStaticDataService();
+            Container.BindInterfacesAndSelfTo<TileFactory>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ObjectPool>().FromInstance(_objectPool).AsSingle();
+        }
+
+        private void  BindStaticDataService()
+        {
+            Container.BindInterfacesAndSelfTo<StaticDataService>().AsSingle();
             
+            StaticDataService staticDataService = Container.Resolve<StaticDataService>();
+            staticDataService.LoadTiles();
+            staticDataService.LoadBackgrounds();
         }
 
         private void BindStateMachine()
@@ -45,7 +62,7 @@ namespace neeksdk.Scripts.Infrastructure.DIInstallers
         private void StartGame()
         {
             DOTween.Init(logBehaviour: LogBehaviour.ErrorsOnly);
-            
+
             StateMachine stateMachine = Container.Resolve<StateMachine>();
             stateMachine.SetupStateMachine(GetStateMachineStates());
             stateMachine.Enter<LoadingState>();

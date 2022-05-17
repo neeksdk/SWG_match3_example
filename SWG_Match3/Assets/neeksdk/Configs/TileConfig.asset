@@ -15,13 +15,17 @@ MonoBehaviour:
   Tiles:
   - Name: Fire Tile
     Type: 0
-    Sprite: {fileID: 21300000, guid: caecb232bac9bbd4895d177b383b7dbc, type: 3}
+    TilePrefab: {fileID: 6186102622723595318, guid: 0e708536500befe438a43341de1a2b37,
+      type: 3}
   - Name: Water Tile
     Type: 1
-    Sprite: {fileID: 21300000, guid: fa9d0beae7a78584eb13b3f4058ce9b9, type: 3}
+    TilePrefab: {fileID: 6186102622723595318, guid: c6b8e59f75513aa4698aa321b0cce481,
+      type: 3}
   - Name: Leaf Tile
     Type: 2
-    Sprite: {fileID: 21300000, guid: 20ff2112ed1038a4bbaf899f4c60db6b, type: 3}
+    TilePrefab: {fileID: 6186102622723595318, guid: 8a66fbe6abc9e7547864dbcc3915cb96,
+      type: 3}
   - Name: Lighting Tile
     Type: 3
-    Sprite: {fileID: 21300000, guid: 5e20efa7dd428c7499841076209b60e1, type: 3}
+    TilePrefab: {fileID: 6186102622723595318, guid: 46649e30b1a8abc408ab94a9074dab56,
+      type: 3}
