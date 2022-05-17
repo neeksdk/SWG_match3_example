@@ -1,6 +1,6 @@
 namespace neeksdk.Scripts.Game.Board.BoardBackgrounds
 {
-    public enum BackgroundTypes
+    public enum BackgroundType
     {
         Standard,
         Empty

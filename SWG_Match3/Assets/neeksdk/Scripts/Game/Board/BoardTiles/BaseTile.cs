@@ -4,6 +4,7 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles
 {
     public abstract class BaseTile : ITile
     {
+        protected TileType _tileType;
         protected IMovable _moveBehaviour;
         protected ICollectable _collectBehaviour;
 

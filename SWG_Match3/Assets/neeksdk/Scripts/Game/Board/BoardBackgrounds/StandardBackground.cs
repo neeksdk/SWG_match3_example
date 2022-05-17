@@ -4,14 +4,14 @@ namespace neeksdk.Scripts.Game.Board.BoardBackgrounds
 {
     public class StandardBackground
     {
-        private readonly BackgroundTypes _backgroundType;
+        private readonly BackgroundType _backgroundType;
 
         public ITile Tile { get; set; }
 
-        public StandardBackground(BackgroundTypes backgroundType) =>
+        public StandardBackground(BackgroundType backgroundType) =>
             _backgroundType = backgroundType;
 
         public bool CanPlaceTile() =>
-            _backgroundType == BackgroundTypes.Standard;
+            _backgroundType == BackgroundType.Standard;
     }
 }

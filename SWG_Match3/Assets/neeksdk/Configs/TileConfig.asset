@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa30393ac6306b64f8efaf10ac0203d2, type: 3}
+  m_Name: TileConfig
+  m_EditorClassIdentifier: 
+  Tiles:
+  - Name: Fire Tile
+    Type: 0
+    Sprite: {fileID: 21300000, guid: caecb232bac9bbd4895d177b383b7dbc, type: 3}
+  - Name: Water Tile
+    Type: 1
+    Sprite: {fileID: 21300000, guid: fa9d0beae7a78584eb13b3f4058ce9b9, type: 3}
+  - Name: Leaf Tile
+    Type: 2
+    Sprite: {fileID: 21300000, guid: 20ff2112ed1038a4bbaf899f4c60db6b, type: 3}
+  - Name: Lighting Tile
+    Type: 3
+    Sprite: {fileID: 21300000, guid: 5e20efa7dd428c7499841076209b60e1, type: 3}
