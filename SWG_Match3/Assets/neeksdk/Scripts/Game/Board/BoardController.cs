@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using neeksdk.Scripts.Extensions;
-using neeksdk.Scripts.Game.Board.BoardBackgrounds;
 using neeksdk.Scripts.Game.Board.BoardTiles;
 using UnityEngine;
 
@@ -12,6 +12,9 @@ namespace neeksdk.Scripts.Game.Board
         
         private BoardData _boardData;
         private BoardTileData[,] _boardTileData;
+        
+        private readonly BackgroundTileGenerator _backgroundTileGenerator = new BackgroundTileGenerator();
+        private readonly TileGenerator _tileGenerator = new TileGenerator();
 
         public void GenerateLevel(int rows, int cols, int emptyTiles, params TileType[] tileTypes)
         {
@@ -23,82 +26,55 @@ namespace neeksdk.Scripts.Game.Board
                 TileTypes = tileTypes
             };
             
-            GenerateBackground();
-        }
-
-        private void GenerateBackground()
-        {
-            _boardTileData = new BoardTileData[_boardData.Rows, _boardData.Cols];
+            _backgroundTileGenerator.GenerateBackground(_boardData, _backgroundsTransform, out BoardTileData[,] boardTileData);
+            _boardTileData = boardTileData;
             
-            PopulateBoardData();
-            AddEmptyTiles();
-            PopulateBackgroundTiles();
+            _tileGenerator.GenerateTiles(_boardData, _boardTileData);
         }
-
-        private void PopulateBoardData()
+        
+        private bool FindMatchedTiles(BoardTileData boardTileData, BoardSearchPattern searchPattern, out List<BoardTileData> matchedTiles)
         {
-            for (int i = 0; i < _boardData.Rows; i++)
+            matchedTiles = new List<BoardTileData>();
+            TileType tileType = boardTileData.Tile.TileType;
+            switch (searchPattern)
             {
-                for (int j = 0; j < _boardData.Cols; j++)
-                {
-                    _boardTileData[i, j] = new BoardTileData()
-                    {
-                        Row = i,
-                        Col = j,
-                        BackgroundType = BackgroundType.Standard
-                    };
-                }
+                case BoardSearchPattern.Horizontal:
+                    bool checkRight = CheckTileForMatchRecursively(tileType, boardTileData.Row + 1, boardTileData.Col, ref matchedTiles, 1, 0);
+                    bool checkLeft = CheckTileForMatchRecursively(tileType, boardTileData.Row - 1, boardTileData.Col, ref matchedTiles, -1, 0);
+                    break;
+                case BoardSearchPattern.Vertical:
+                    bool checkUp = CheckTileForMatchRecursively(tileType, boardTileData.Row, boardTileData.Col + 1, ref matchedTiles, 0, 1);
+                    bool checkDown = CheckTileForMatchRecursively(tileType, boardTileData.Row, boardTileData.Col - 1, ref matchedTiles, 0, -1);
+                    break;
+                default:
+                    break;
             }
+
+            return matchedTiles.Count >= 3;
         }
 
-        private void AddEmptyTiles()
-        {
-            int index = _boardData.EmptyTiles;
-            while (index != 0)
-            {
-                int randomRow = Random.Range(0, _boardData.Rows);
-                int randomCol = Random.Range(0, _boardData.Cols);
-                if (_boardTileData[randomRow, randomCol].BackgroundType == BackgroundType.Empty)
-                {
-                    continue;
-                }
 
-                _boardTileData[randomRow, randomCol].BackgroundType = BackgroundType.Empty;
-                index -= 1;
-            }
-        }
-
-        private void PopulateBackgroundTiles()
+        private bool CheckTileForMatchRecursively(TileType matchedType, int row, int col, ref List<BoardTileData> matchedTiles, int incrementRow, int incrementCol)
         {
-            foreach (BoardTileData boardTileData in _boardTileData)
+            while (true)
             {
-                if (!boardTileData.BackgroundType.Spawn(_backgroundsTransform, out IBackground background, BoardToVectorCoords(boardTileData)))
+                if (!_boardData.IsInsideGridBounds(row, col))
                 {
-                    continue;
+                    return false;
                 }
 
-                boardTileData.Background = background;
-                background.GameObject.SetActive(true);
+                BoardTileData nextTile = _boardTileData[row, col];
+                if (nextTile.Tile == null || nextTile.Tile.TileType != matchedType)
+                {
+                    return false;
+                }
+
+                matchedTiles.Add(nextTile);
+                row += incrementRow;
+                col += incrementCol;
             }
         }
-
-        private Vector3 BoardToVectorCoords(BoardTileData boardTileData) =>
-            new Vector3(boardTileData.Row, boardTileData.Col, 0);
-
-        private class BoardData
-        {
-            public int Rows;
-            public int Cols;
-            public int EmptyTiles;
-            public TileType[] TileTypes;
-        }
-
-        private class BoardTileData
-        {
-            public int Row;
-            public int Col;
-            public BackgroundType BackgroundType;
-            public IBackground Background;
-        }
+        
+        
     }
 }
