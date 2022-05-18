@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using neeksdk.Scripts.Game;
+using neeksdk.Scripts.Game.Board;
 using neeksdk.Scripts.Infrastructure.Factory;
 using neeksdk.Scripts.Infrastructure.Pool;
 using neeksdk.Scripts.Infrastructure.States;
@@ -13,6 +15,7 @@ namespace neeksdk.Scripts.Infrastructure.DIInstallers
     public class DiMonoInstaller : MonoInstaller<DiMonoInstaller>, IInitializable
     {
         [SerializeField] private ObjectPool _objectPool;
+        [SerializeField] private BoardController _boardController;
         
         public override void InstallBindings()
         {
@@ -20,6 +23,7 @@ namespace neeksdk.Scripts.Infrastructure.DIInstallers
             
             BindServices();
             BindStateMachine();
+            Container.BindInterfacesAndSelfTo<GameController>().AsSingle();
         }
         
         public void Initialize() =>
@@ -30,6 +34,7 @@ namespace neeksdk.Scripts.Infrastructure.DIInstallers
             Container.BindInterfacesAndSelfTo<StaticDataService>().AsSingle();
             Container.BindInterfacesAndSelfTo<TileFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<ObjectPool>().FromInstance(_objectPool).AsSingle();
+            Container.BindInterfacesAndSelfTo<BoardController>().FromInstance(_boardController).AsSingle();
         }
 
         private void BindStateMachine()

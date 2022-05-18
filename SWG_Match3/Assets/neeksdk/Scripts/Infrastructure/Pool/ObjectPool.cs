@@ -15,7 +15,9 @@ namespace neeksdk.Scripts.Infrastructure.Pool
         private readonly Dictionary<BackgroundType, Queue<BackgroundMonoContainer>> _backgroundGoPool = new Dictionary<BackgroundType, Queue<BackgroundMonoContainer>>();
 
         private TileFactory _tileFactory;
-        
+
+        public static ObjectPool Instance = null;
+
         public void InitializePool(int initialSize, TileFactory tileFactory, params TileType[] tileTypesForLevel)
         {
             _tileFactory = tileFactory;
@@ -25,8 +27,7 @@ namespace neeksdk.Scripts.Infrastructure.Pool
             
             for (int i = 0; i < halfSize; i++)
             {
-                AddBackgroundToPool(BackgroundType.StandardA);
-                AddBackgroundToPool(BackgroundType.StandardB);
+                AddBackgroundToPool(BackgroundType.Standard);
             }
 
             for (int i = 0; i < emptyTiles; i++)
@@ -95,11 +96,22 @@ namespace neeksdk.Scripts.Infrastructure.Pool
             ReturnToPool(background);
         } 
 
+        private void Awake()
+        {
+            if (Instance == this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            Instance = this;
+        }
+        
         private void AddBackgroundToPool(BackgroundType backgroundType)
         {
             CheckBackgroundPoolDataAvailability(backgroundType);
             
-            BackgroundMonoContainer backgroundMonoContainer = _tileFactory.CreateStandardBackgroundTile(BackgroundType.StandardA, transform);
+            BackgroundMonoContainer backgroundMonoContainer = _tileFactory.CreateStandardBackgroundTile(backgroundType, transform);
             backgroundMonoContainer.gameObject.SetActive(false);
             _backgroundGoPool[backgroundType].Enqueue(backgroundMonoContainer);
             _backgroundPool[backgroundType].Enqueue(backgroundMonoContainer.Background);

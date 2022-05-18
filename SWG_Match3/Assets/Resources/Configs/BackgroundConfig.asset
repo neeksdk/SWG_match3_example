@@ -19,9 +19,5 @@ MonoBehaviour:
       type: 3}
   - Name: Standard Black Tile
     Type: 1
-    TilePrefab: {fileID: 7902833296181651368, guid: 75bfd5d90a8921f45aa170b63cc958ba,
-      type: 3}
-  - Name: EmptyTile
-    Type: 2
     TilePrefab: {fileID: 5635012434309534588, guid: 2200c96a6f5b3844888650bfb7547ac5,
       type: 3}
