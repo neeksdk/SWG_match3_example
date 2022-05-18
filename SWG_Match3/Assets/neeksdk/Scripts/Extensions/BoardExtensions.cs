@@ -1,4 +1,5 @@
 using neeksdk.Scripts.Game.Board;
+using neeksdk.Scripts.Game.Board.BoardTiles;
 using UnityEngine;
 
 namespace neeksdk.Scripts.Extensions
@@ -10,5 +11,8 @@ namespace neeksdk.Scripts.Extensions
         
         public static Vector3 BoardToVectorCoords(this BoardTileData boardTileData) =>
             new Vector3(boardTileData.Row, boardTileData.Col, 0);
+
+        public static TileType TileType(this BoardTileData boardTileData) =>
+            boardTileData.Tile.TileType;
     }
 }

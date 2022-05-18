@@ -30,5 +30,27 @@ namespace neeksdk.Scripts.Extensions
             tile = ObjectPool.Instance.Spawn(tileType, transform, position, rotation);
             return true; 
         }
+
+        public static bool Recycle(this ITile tile)
+        {
+            if (ObjectPool.Instance == null)
+            {
+                return false;
+            }
+            
+            ObjectPool.Instance.Recycle(tile.TileMonoContainer);
+            return true;
+        }
+        
+        public static bool Recycle(this IBackground background)
+        {
+            if (ObjectPool.Instance == null)
+            {
+                return false;
+            }
+            
+            ObjectPool.Instance.Recycle(background.BackgroundMonoContainer);
+            return true;
+        }
     }
 }

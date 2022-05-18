@@ -51,12 +51,16 @@ namespace neeksdk.Scripts.Infrastructure.Pool
                 AddTileToPool(tileType);
             }
 
-            GameObject go = _tileGoPool[tileType].Dequeue().gameObject;
+            TileMonoContainer monoContainer = _tileGoPool[tileType].Dequeue();
+            GameObject go = monoContainer.gameObject;
             go.transform.SetParent(parent);
             go.transform.position = position;
             go.transform.rotation = rotation;
 
-            return _tilePool[tileType].Dequeue();
+            ITile tile = _tilePool[tileType].Dequeue();
+            monoContainer.SetupTile(tile);
+            
+            return tile;
         }
 
         public void Recycle(TileMonoContainer tile)

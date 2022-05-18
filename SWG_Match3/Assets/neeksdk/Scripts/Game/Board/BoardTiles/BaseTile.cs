@@ -18,6 +18,7 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles
         }
         
         public GameObject GameObject => _tileMonoContainer.gameObject;
+        public TileMonoContainer TileMonoContainer => _tileMonoContainer;
 
         public void Move(TileMoveDirections moveDirection) =>
             _moveBehaviour.Move(moveDirection);

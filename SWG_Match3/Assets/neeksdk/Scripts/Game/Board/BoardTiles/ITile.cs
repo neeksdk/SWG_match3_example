@@ -7,6 +7,7 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles
     {
         void Move(TileMoveDirections moveDirection);
         GameObject GameObject { get; }
+        TileMonoContainer TileMonoContainer { get; }
         TileType TileType { get; }
     }
 }

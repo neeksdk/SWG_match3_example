@@ -29,7 +29,28 @@ namespace neeksdk.Scripts.Game.Board
             _backgroundTileGenerator.GenerateBackground(_boardData, _backgroundsTransform, out BoardTileData[,] boardTileData);
             _boardTileData = boardTileData;
             
-            _tileGenerator.GenerateTiles(_boardData, _boardTileData);
+            _tileGenerator.GenerateTiles(_boardData, _boardTileData, tileTypes, _tilesTransform);
+        }
+
+        public void ShuffleBoard() =>
+            _tileGenerator.ShuffleBoard(_boardTileData);
+
+        public void ClearBoard()
+        {
+            foreach (BoardTileData boardTileData in _boardTileData)
+            {
+                if (!boardTileData.Tile.Recycle())
+                {
+                    Destroy(boardTileData.Tile.GameObject);
+                }
+
+                if (!boardTileData.Background.Recycle())
+                {
+                    Destroy(boardTileData.Background.GameObject);
+                }
+            }
+
+            _boardTileData = null;
         }
         
         private bool FindMatchedTiles(BoardTileData boardTileData, BoardSearchPattern searchPattern, out List<BoardTileData> matchedTiles)
@@ -74,7 +95,5 @@ namespace neeksdk.Scripts.Game.Board
                 col += incrementCol;
             }
         }
-        
-        
     }
 }

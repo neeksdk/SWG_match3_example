@@ -16,6 +16,7 @@ namespace neeksdk.Scripts.Game.Board.BoardBackgrounds
         }
 
         public GameObject GameObject => _backgroundMonoContainer.gameObject;
+        public BackgroundMonoContainer BackgroundMonoContainer => _backgroundMonoContainer;
 
         public bool CanPlaceTile() =>
             BackgroundType != BackgroundType.Empty;

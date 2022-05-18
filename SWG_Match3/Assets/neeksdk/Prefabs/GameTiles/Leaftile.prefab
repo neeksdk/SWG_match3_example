@@ -10,8 +10,14 @@ PrefabInstance:
     - target: {fileID: 6186102622723595318, guid: 0e708536500befe438a43341de1a2b37,
         type: 3}
       propertyPath: m_Name
-      value: FireTile
+      value: LeafTile
       objectReference: {fileID: 0}
+    - target: {fileID: 6186102622723595320, guid: 0e708536500befe438a43341de1a2b37,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 20ff2112ed1038a4bbaf899f4c60db6b,
+        type: 3}
     - target: {fileID: 6186102622723595321, guid: 0e708536500befe438a43341de1a2b37,
         type: 3}
       propertyPath: m_RootOrder
