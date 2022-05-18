@@ -3,6 +3,7 @@ namespace neeksdk.Scripts.Game.Board
     public enum BoardSearchPattern
     {
         Horizontal,
-        Vertical
+        Vertical,
+        Both
     }
 }

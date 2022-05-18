@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using neeksdk.Scripts.Extensions;
 using neeksdk.Scripts.Game.Board.BoardTiles;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace neeksdk.Scripts.Game.Board
@@ -70,6 +71,24 @@ namespace neeksdk.Scripts.Game.Board
             }
 
             return matchedTiles.Count >= 3;
+        }
+
+        private bool FindMatchesCountAfterTileSwap(BoardTileData target, BoardTileData destination, out BoardSearchPattern matchPattern)
+        {
+            matchPattern = BoardSearchPattern.Both;
+            
+            BoardTileData targetTile = target;
+            BoardTileData destinationTile = destination;
+
+            _boardTileData[target.Row, target.Col] = destination;
+            _boardTileData[destination.Row, destination.Col] = target;
+            
+            //todo: check if match occurs
+            
+            _boardTileData[target.Row, target.Col] = target;
+            _boardTileData[destination.Row, destination.Col] = destination;
+
+            return false;
         }
 
 

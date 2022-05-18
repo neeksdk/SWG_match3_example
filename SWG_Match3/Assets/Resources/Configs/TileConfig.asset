@@ -19,7 +19,7 @@ MonoBehaviour:
       type: 3}
   - Name: Water Tile
     Type: 1
-    TilePrefab: {fileID: 7504478410801072620, guid: 46649e30b1a8abc408ab94a9074dab56,
+    TilePrefab: {fileID: 826219131754992282, guid: c6b8e59f75513aa4698aa321b0cce481,
       type: 3}
   - Name: Leaf Tile
     Type: 2
@@ -27,5 +27,5 @@ MonoBehaviour:
       type: 3}
   - Name: Lighting Tile
     Type: 3
-    TilePrefab: {fileID: 826219131754992282, guid: c6b8e59f75513aa4698aa321b0cce481,
+    TilePrefab: {fileID: 7504478410801072620, guid: 46649e30b1a8abc408ab94a9074dab56,
       type: 3}
