@@ -12,24 +12,14 @@ namespace neeksdk.Scripts.Game.Board
         
         private BoardData _boardData;
         private BoardTileData[,] _boardTileData;
-        
+
         private readonly BackgroundTileGenerator _backgroundTileGenerator = new BackgroundTileGenerator();
         private readonly TileGenerator _tileGenerator = new TileGenerator();
 
-        public void GenerateLevel(int rows, int cols, int emptyTiles, params TileType[] tileTypes)
+        public void SetupLevel(BoardData boardData)
         {
-            _boardData = new BoardData()
-            {
-                Rows = rows,
-                Cols = cols,
-                EmptyTiles = emptyTiles,
-                TileTypes = tileTypes
-            };
-            
-            _backgroundTileGenerator.GenerateBackground(_boardData, _backgroundsTransform, out BoardTileData[,] boardTileData);
-            _boardTileData = boardTileData;
-            
-            _tileGenerator.GenerateTiles(_boardData, _boardTileData, tileTypes, _tilesTransform);
+            _boardData = boardData;
+            GenerateLevel();
         }
 
         public void ShuffleBoard() =>
@@ -51,6 +41,14 @@ namespace neeksdk.Scripts.Game.Board
             }
 
             _boardTileData = null;
+        }
+
+        private void GenerateLevel()
+        {
+            _backgroundTileGenerator.GenerateBackground(_boardData, _backgroundsTransform, out BoardTileData[,] boardTileData);
+            _boardTileData = boardTileData;
+            
+            _tileGenerator.GenerateTiles(_boardData, _boardTileData, _tilesTransform);
         }
         
         private bool FindMatchedTiles(BoardTileData boardTileData, BoardSearchPattern searchPattern, out List<BoardTileData> matchedTiles)

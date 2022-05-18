@@ -21,8 +21,15 @@ namespace neeksdk.Scripts.Infrastructure.States
         
         public void Enter()
         {
-            _objectPool.InitializePool(36, _tileFactory, TileType.Fire, TileType.Leaf, TileType.Water, TileType.Lighting);
-            _boardController.GenerateLevel(6, 6, 3, TileType.Fire, TileType.Leaf, TileType.Lighting, TileType.Water);
+            TileType[] tileTypes = new TileType[] {TileType.Fire, TileType.Leaf, TileType.Lighting, TileType.Water};
+            _objectPool.InitializePool(36, _tileFactory, tileTypes);
+            _boardController.SetupLevel(new BoardData()
+            {
+                Rows = 6, 
+                Cols = 6, 
+                EmptyTiles = 3, 
+                TileTypes = tileTypes
+            });
         }
 
         public void Exit()

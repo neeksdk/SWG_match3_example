@@ -9,7 +9,7 @@ namespace neeksdk.Scripts.Game.Board
 {
     public class TileGenerator
     {
-        public void GenerateTiles(BoardData boardData, BoardTileData[,] boardTileData, TileType[] tileTypes, Transform transform)
+        public void GenerateTiles(BoardData boardData, BoardTileData[,] boardTileData, Transform transform)
         {
             BoardTileData left2;
             BoardTileData left1;
@@ -27,7 +27,7 @@ namespace neeksdk.Scripts.Game.Board
                         continue;
                     }
 
-                    List<TileType> allowedTileTypes = tileTypes.ToList();
+                    List<TileType> allowedTileTypes = boardData.TileTypes.ToList();
                     left2 = i >= 2 ? boardTileData[i - 2, j] : null;
                     left1 = i >= 1 ? boardTileData[i - 1, j] : null;
                     down2 = j >= 2 ? boardTileData[i, j - 2] : null;
