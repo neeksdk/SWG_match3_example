@@ -3,15 +3,22 @@ using UnityEngine;
 
 namespace neeksdk.Scripts.Game.Board.BoardTiles
 {
-    public abstract class BaseTile : MonoBehaviour, ITile
+    public abstract class BaseTile : ITile
     {
-        protected TileType _tileType;
+        public TileType TileType { get; }
+        private readonly TileMonoContainer _tileMonoContainer;
+        
         protected IMovable _moveBehaviour;
         protected ICollectable _collectBehaviour;
 
-        public GameObject GameObject => gameObject;
-        public TileType TileType => _tileType; 
+        protected BaseTile(TileType tileType, TileMonoContainer monoContainer)
+        {
+            TileType = tileType;
+            _tileMonoContainer = monoContainer;
+        }
         
+        public GameObject GameObject => _tileMonoContainer.gameObject;
+
         public void Move(TileMoveDirections moveDirection) =>
             _moveBehaviour.Move(moveDirection);
 

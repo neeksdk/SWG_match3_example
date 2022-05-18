@@ -1,3 +1,4 @@
+using neeksdk.Scripts.Game.Board.BoardTiles;
 using neeksdk.Scripts.Infrastructure.Factory;
 using neeksdk.Scripts.Infrastructure.Pool;
 
@@ -16,7 +17,7 @@ namespace neeksdk.Scripts.Infrastructure.States
         
         public void Enter()
         {
-            _objectPool.InitializePool(36, _tileFactory);
+            _objectPool.InitializePool(36, _tileFactory, TileType.Fire, TileType.Leaf, TileType.Water, TileType.Lighting);
         }
 
         public void Exit()

@@ -15,13 +15,13 @@ MonoBehaviour:
   Backgrounds:
   - Name: Standard Light Tile
     Type: 0
-    TilePrefab: {fileID: 4920228529602841280, guid: ee29962968488424a9191df37de67f1a,
+    TilePrefab: {fileID: 4428888917177952068, guid: ee29962968488424a9191df37de67f1a,
       type: 3}
   - Name: Standard Black Tile
     Type: 1
-    TilePrefab: {fileID: 4920228529602841280, guid: 1f6e588f205f60d45a6d0f56b42e369d,
+    TilePrefab: {fileID: 7902833296181651368, guid: 75bfd5d90a8921f45aa170b63cc958ba,
       type: 3}
   - Name: EmptyTile
     Type: 2
-    TilePrefab: {fileID: 4920228529602841280, guid: c2bfb90ec3908774a805fc7bd3efed9f,
+    TilePrefab: {fileID: 5635012434309534588, guid: 2200c96a6f5b3844888650bfb7547ac5,
       type: 3}

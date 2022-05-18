@@ -8,7 +8,7 @@ namespace neeksdk.Scripts.StaticData
 {
     public class StaticDataService
     {
-        private const string STATIC_DATA_CONFIG_PATH = "Assets/neeksdk/Configs";
+        private const string STATIC_DATA_CONFIG_PATH = "Configs";
 
         private Dictionary<TileType, TilePrefabData> _tiles;
         private Dictionary<BackgroundType, BackgroundPrefabData> _backgroundTiles;

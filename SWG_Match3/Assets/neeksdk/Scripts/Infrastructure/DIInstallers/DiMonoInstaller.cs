@@ -22,22 +22,14 @@ namespace neeksdk.Scripts.Infrastructure.DIInstallers
             BindStateMachine();
         }
         
-        public void Initialize() => StartGame();
+        public void Initialize() =>
+            StartGame();
 
         private void BindServices()
         {
-            BindStaticDataService();
+            Container.BindInterfacesAndSelfTo<StaticDataService>().AsSingle();
             Container.BindInterfacesAndSelfTo<TileFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<ObjectPool>().FromInstance(_objectPool).AsSingle();
-        }
-
-        private void  BindStaticDataService()
-        {
-            Container.BindInterfacesAndSelfTo<StaticDataService>().AsSingle();
-            
-            StaticDataService staticDataService = Container.Resolve<StaticDataService>();
-            staticDataService.LoadTiles();
-            staticDataService.LoadBackgrounds();
         }
 
         private void BindStateMachine()
@@ -63,6 +55,10 @@ namespace neeksdk.Scripts.Infrastructure.DIInstallers
         {
             DOTween.Init(logBehaviour: LogBehaviour.ErrorsOnly);
 
+            StaticDataService staticDataService = Container.Resolve<StaticDataService>();
+            staticDataService.LoadTiles();
+            staticDataService.LoadBackgrounds();
+            
             StateMachine stateMachine = Container.Resolve<StateMachine>();
             stateMachine.SetupStateMachine(GetStateMachineStates());
             stateMachine.Enter<LoadingState>();

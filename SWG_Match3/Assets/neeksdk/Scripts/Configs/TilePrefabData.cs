@@ -1,6 +1,5 @@
 using System;
 using neeksdk.Scripts.Game.Board.BoardTiles;
-using UnityEngine;
 
 namespace neeksdk.Scripts.Configs
 {
@@ -9,6 +8,6 @@ namespace neeksdk.Scripts.Configs
     {
         public string Name;
         public TileType Type;
-        public GameObject TilePrefab;
+        public TileMonoContainer TilePrefab;
     }
 }

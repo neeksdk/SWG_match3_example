@@ -8,18 +8,19 @@ namespace neeksdk.Scripts.Infrastructure.Pool
 {
     public class ObjectPool : MonoBehaviour
     {
-        private Dictionary<TileType, Queue<ITile>> _tilePool = new Dictionary<TileType, Queue<ITile>>();
-        private Dictionary<TileType, Queue<GameObject>> _tileGoPool = new Dictionary<TileType, Queue<GameObject>>();
+        private readonly Dictionary<TileType, Queue<ITile>> _tilePool = new Dictionary<TileType, Queue<ITile>>();
+        private readonly Dictionary<TileType, Queue<TileMonoContainer>> _tileGoPool = new Dictionary<TileType, Queue<TileMonoContainer>>();
 
-        private Dictionary<BackgroundType, Queue<IBackground>> _backgroundPool = new Dictionary<BackgroundType, Queue<IBackground>>();
-        private Dictionary<BackgroundType, Queue<GameObject>> _backgroundGoPool = new Dictionary<BackgroundType, Queue<GameObject>>();
+        private readonly Dictionary<BackgroundType, Queue<IBackground>> _backgroundPool = new Dictionary<BackgroundType, Queue<IBackground>>();
+        private readonly Dictionary<BackgroundType, Queue<BackgroundMonoContainer>> _backgroundGoPool = new Dictionary<BackgroundType, Queue<BackgroundMonoContainer>>();
 
         private TileFactory _tileFactory;
         
-        public void InitializePool(int initialSize, TileFactory tileFactory)
+        public void InitializePool(int initialSize, TileFactory tileFactory, params TileType[] tileTypesForLevel)
         {
             _tileFactory = tileFactory;
             int halfSize = initialSize / 2;
+            int tileOfEachTypeSize = initialSize / tileTypesForLevel.Length + 1;
             int emptyTiles = 3;
             
             for (int i = 0; i < halfSize; i++)
@@ -32,13 +33,24 @@ namespace neeksdk.Scripts.Infrastructure.Pool
             {
                 AddBackgroundToPool(BackgroundType.Empty);
             }
+
+            for (int i = 0; i < tileOfEachTypeSize; i++)
+            {
+                foreach (TileType t in tileTypesForLevel)
+                {
+                    AddTileToPool(t);
+                }
+            }
         }
 
         public ITile Spawn(TileType tileType, Transform parent = null, Vector3 position = default, Quaternion rotation = default)
         {
-            if (!_tilePool.ContainsKey(tileType) || _tilePool[tileType].Count == 0) AddTileToPool(tileType);
+            if (!_tilePool.ContainsKey(tileType) || _tilePool[tileType].Count == 0)
+            {
+                AddTileToPool(tileType);
+            }
 
-            GameObject go = _tileGoPool[tileType].Dequeue();
+            GameObject go = _tileGoPool[tileType].Dequeue().gameObject;
             go.transform.SetParent(parent);
             go.transform.position = position;
             go.transform.rotation = rotation;
@@ -46,96 +58,111 @@ namespace neeksdk.Scripts.Infrastructure.Pool
             return _tilePool[tileType].Dequeue();
         }
 
-        public void Recycle(ITile tile)
+        public void Recycle(TileMonoContainer tile)
         {
-            if (tile == null || tile.GameObject == null)
+            if (tile == null || tile.gameObject == null)
             {
                 return;
             } 
             
-            GameObject go = tile.GameObject;
-            go.SetActive(false);
-            go.transform.parent = transform;
-            go.transform.position = default;
-            go.transform.rotation = default;
+            ResetPrefabGameObject(tile.gameObject);
             ReturnToPool(tile);
-        } 
+        }
         
-        public void Recycle(IBackground background)
+        public IBackground Spawn(BackgroundType backgroundType, Transform parent = null, Vector3 position = default, Quaternion rotation = default)
         {
-            if (background == null || background.GameObject == null)
+            if (!_backgroundPool.ContainsKey(backgroundType) || _backgroundPool[backgroundType].Count == 0)
+            {
+                AddBackgroundToPool(backgroundType);
+            }
+
+            GameObject go = _backgroundGoPool[backgroundType].Dequeue().gameObject;
+            go.transform.SetParent(parent);
+            go.transform.position = position;
+            go.transform.rotation = rotation;
+
+            return _backgroundPool[backgroundType].Dequeue();
+        }
+
+        public void Recycle(BackgroundMonoContainer background)
+        {
+            if (background == null || background.gameObject == null)
             {
                 return;
             } 
             
-            GameObject go = background.GameObject;
-            go.SetActive(false);
-            go.transform.parent = transform;
-            go.transform.position = default;
-            go.transform.rotation = default;
+            ResetPrefabGameObject(background.gameObject);
             ReturnToPool(background);
         } 
 
         private void AddBackgroundToPool(BackgroundType backgroundType)
         {
-            GameObject backgroundGo = _tileFactory.CreateBackgroundTile(BackgroundType.StandardA, transform);
-            backgroundGo.SetActive(false);
+            CheckBackgroundPoolDataAvailability(backgroundType);
             
-            if (!_backgroundGoPool.ContainsKey(backgroundType))
-                _backgroundGoPool.Add(backgroundType, new Queue<GameObject>());
-            
-            _backgroundGoPool[backgroundType].Enqueue(backgroundGo);
-            
-            
-            IBackground background = backgroundGo.GetComponent<IBackground>();
-            
-            if (!_backgroundPool.ContainsKey(backgroundType))
-                _backgroundPool.Add(backgroundType, new Queue<IBackground>());
-            
-            _backgroundPool[backgroundType].Enqueue(background);
+            BackgroundMonoContainer backgroundMonoContainer = _tileFactory.CreateStandardBackgroundTile(BackgroundType.StandardA, transform);
+            backgroundMonoContainer.gameObject.SetActive(false);
+            _backgroundGoPool[backgroundType].Enqueue(backgroundMonoContainer);
+            _backgroundPool[backgroundType].Enqueue(backgroundMonoContainer.Background);
         }
 
         private void AddTileToPool(TileType tileType)
         {
-            GameObject tileGo = _tileFactory.CreateTile(tileType, transform);
-            tileGo.SetActive(false);
+            CheckTilePoolDataAvailability(tileType);
             
-            if (!_tileGoPool.ContainsKey(tileType))
-                _tileGoPool.Add(tileType, new Queue<GameObject>());
-            
+            TileMonoContainer tileGo = _tileFactory.CreateStandardTile(tileType, transform);
+            tileGo.gameObject.SetActive(false);
             _tileGoPool[tileType].Enqueue(tileGo);
+            _tilePool[tileType].Enqueue(tileGo.Tile);
+        }
 
-
-            ITile tile = tileGo.GetComponent<ITile>();
+        private void ReturnToPool(TileMonoContainer tile)
+        {
+            if (!_tileGoPool.ContainsKey(tile.Tile.TileType) || !_tilePool.ContainsKey(tile.Tile.TileType))
+            {
+                Destroy(tile.gameObject);
+                return;
+            }
             
+            _tileGoPool[tile.Tile.TileType].Enqueue(tile);
+            _tilePool[tile.Tile.TileType].Enqueue(tile.Tile);
+        }
+
+        private void ReturnToPool(BackgroundMonoContainer background)
+        {
+            if (!_backgroundGoPool.ContainsKey(background.Background.BackgroundType) || !_backgroundPool.ContainsKey(background.Background.BackgroundType))
+            {
+                Destroy(background.gameObject);
+                return;
+            }
+            
+            _backgroundGoPool[background.Background.BackgroundType].Enqueue(background);
+            _backgroundPool[background.Background.BackgroundType].Enqueue(background.Background);
+        }
+        
+        private void CheckBackgroundPoolDataAvailability(BackgroundType backgroundType)
+        {
+            if (!_backgroundGoPool.ContainsKey(backgroundType))
+                _backgroundGoPool.Add(backgroundType, new Queue<BackgroundMonoContainer>());
+
+            if (!_backgroundPool.ContainsKey(backgroundType))
+                _backgroundPool.Add(backgroundType, new Queue<IBackground>());
+        }
+
+        private void CheckTilePoolDataAvailability(TileType tileType)
+        {
+            if (!_tileGoPool.ContainsKey(tileType))
+                _tileGoPool.Add(tileType, new Queue<TileMonoContainer>());
+
             if (!_tilePool.ContainsKey(tileType))
                 _tilePool.Add(tileType, new Queue<ITile>());
-            
-            _tilePool[tileType].Enqueue(tile);
         }
-
-        private void ReturnToPool(ITile tile)
+        
+        private void ResetPrefabGameObject(GameObject go)
         {
-            if (!_tileGoPool.ContainsKey(tile.TileType) || !_tilePool.ContainsKey(tile.TileType))
-            {
-                Destroy(tile.GameObject);
-                return;
-            }
-            
-            _tileGoPool[tile.TileType].Enqueue(tile.GameObject);
-            _tilePool[tile.TileType].Enqueue(tile);
-        }
-
-        private void ReturnToPool(IBackground background)
-        {
-            if (!_backgroundGoPool.ContainsKey(background.BackgroundType) || !_backgroundPool.ContainsKey(background.BackgroundType))
-            {
-                Destroy(background.GameObject);
-                return;
-            }
-            
-            _backgroundGoPool[background.BackgroundType].Enqueue(background.GameObject);
-            _backgroundPool[background.BackgroundType].Enqueue(background);
+            go.SetActive(false);
+            go.transform.parent = transform;
+            go.transform.position = default;
+            go.transform.rotation = default;
         }
     }
 }
