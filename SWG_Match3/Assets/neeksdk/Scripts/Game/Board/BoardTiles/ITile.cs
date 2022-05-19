@@ -8,6 +8,8 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles
     {
         IPromise ShowUp(bool withAnimation = true);
         void Move(TileMoveDirections moveDirection);
+        void Select();
+        void Deselect();
         void Cleanup();
         GameObject GameObject { get; }
         TileMonoContainer TileMonoContainer { get; }

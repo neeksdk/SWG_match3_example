@@ -58,7 +58,6 @@ namespace neeksdk.Scripts.Game.Board
             return false;
         }
 
-
         private bool CheckTileForMatchRecursively(TileType matchedType, int row, int col, ref List<BoardTileData> matchedTiles, int incrementRow, int incrementCol)
         {
             while (true)

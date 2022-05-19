@@ -46,13 +46,17 @@ namespace neeksdk.Scripts.Infrastructure.DIInstallers
         private void BindStates()
         {
             Container.BindInterfacesAndSelfTo<LoadingState>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GameSelectionState>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GameAnimationState>().AsSingle();
         }
 
         private Dictionary<Type, IExitableState> GetStateMachineStates()
         {
             return new Dictionary<Type, IExitableState>()
             {
-                [typeof(LoadingState)] = Container.Resolve<LoadingState>()
+                [typeof(LoadingState)] = Container.Resolve<LoadingState>(),
+                [typeof(GameSelectionState)] = Container.Resolve<GameSelectionState>(),
+                [typeof(GameAnimationState)] = Container.Resolve<GameAnimationState>()
             };
         }
 
