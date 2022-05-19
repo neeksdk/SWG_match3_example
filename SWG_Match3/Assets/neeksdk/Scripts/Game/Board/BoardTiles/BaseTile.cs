@@ -44,6 +44,9 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles
         public void Move(TileMoveDirections moveDirection) =>
             _moveBehaviour.Move(moveDirection);
 
+        public IPromise Move(BoardCoords boardCoords) =>
+            _moveBehaviour.Move(boardCoords);
+
         public void Select() =>
             _selectBehaviour.Select();
 

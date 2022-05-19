@@ -1,4 +1,5 @@
 using neeksdk.Scripts.Extensions;
+using neeksdk.Scripts.Game.Board.BoardTiles;
 using RSG;
 using UnityEngine;
 
@@ -20,6 +21,14 @@ namespace neeksdk.Scripts.Game.Board
         {
             BoardData = boardData;
             return GenerateLevel();
+        }
+
+        public IPromise SwapTiles(ITile fromTile, ITile toTile)
+        {
+            fromTile.Deselect();
+            toTile.Deselect();
+            
+            return Promise.All(fromTile.Move(toTile.Coords), toTile.Move(fromTile.Coords));
         }
 
         public void ShuffleBoard() =>

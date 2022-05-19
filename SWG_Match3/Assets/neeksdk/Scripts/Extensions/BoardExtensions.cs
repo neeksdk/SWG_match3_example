@@ -11,13 +11,22 @@ namespace neeksdk.Scripts.Extensions
         
         public static Vector3 BoardToVectorCoords(this BoardTileData boardTileData) =>
             new Vector3(boardTileData.Coords.Row, boardTileData.Coords.Col, 0);
+        
+        public static Vector3 BoardToVectorCoords(this BoardCoords boardCoords) =>
+            new Vector3(boardCoords.Row, boardCoords.Col, 0);
 
         public static TileType TileType(this BoardTileData boardTileData) =>
             boardTileData.Tile.TileType;
 
+        public static bool IsSameRows(this ITile tile, ITile comparedTile) =>
+            tile.Coords.Row == comparedTile.Coords.Row;
+
+        public static bool IsSameCols(this ITile tile, ITile comparedTile) =>
+            tile.Coords.Col == comparedTile.Coords.Col;
+
         public static bool IsNeighbourTile(this ITile tile, ITile comparedTile)
         {
-            if (tile.Coords.Row == comparedTile.Coords.Row)
+            if (tile.IsSameRows(comparedTile))
             {
                 if (tile.Coords.Col == comparedTile.Coords.Col + 1 || tile.Coords.Col == comparedTile.Coords.Col - 1)
                 {
@@ -25,7 +34,7 @@ namespace neeksdk.Scripts.Extensions
                 }
             }
 
-            if (tile.Coords.Col == comparedTile.Coords.Col)
+            if (tile.IsSameCols(comparedTile))
             {
                 if (tile.Coords.Row == comparedTile.Coords.Row + 1 || tile.Coords.Row == comparedTile.Coords.Row - 1)
                 {

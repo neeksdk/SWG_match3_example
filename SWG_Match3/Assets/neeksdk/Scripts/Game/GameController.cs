@@ -1,6 +1,8 @@
+using System;
 using neeksdk.Scripts.Extensions;
 using neeksdk.Scripts.Game.Board;
 using neeksdk.Scripts.Game.Board.BoardTiles;
+using RSG;
 
 namespace neeksdk.Scripts.Game
 {
@@ -9,12 +11,14 @@ namespace neeksdk.Scripts.Game
         private readonly BoardController _boardController;
         
         private ITile _firstTileSelected;
-        private ITile _secondTileSelected;
 
-        public GameController(BoardController boardController)
-        {
+        public Action<IPromise> OnSwapTiles;
+
+        public GameController(BoardController boardController) =>
             _boardController = boardController;
-        }
+
+        public void ClearSelectionData() =>
+            _firstTileSelected = null;
 
         public void UserSelectTile(ITile tile)
         {
@@ -37,8 +41,8 @@ namespace neeksdk.Scripts.Game
                 _firstTileSelected.Select();
                 return;
             }
-            
-            //todo: swap tiles
+
+            OnSwapTiles(_boardController.SwapTiles(_firstTileSelected, tile));
         }
     }   
 }

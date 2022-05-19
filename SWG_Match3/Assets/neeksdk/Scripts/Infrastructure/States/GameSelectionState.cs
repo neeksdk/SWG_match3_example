@@ -1,5 +1,6 @@
 using neeksdk.Scripts.Game;
 using neeksdk.Scripts.Game.Board.BoardTiles;
+using RSG;
 
 namespace neeksdk.Scripts.Infrastructure.States
 {
@@ -16,17 +17,21 @@ namespace neeksdk.Scripts.Infrastructure.States
         
         public void Enter()
         {
+            _gameController.ClearSelectionData();
+            _gameController.OnSwapTiles += SwapTiles;
             TileMonoContainer.OnTileSelected += TileSelected;
         }
 
-        public void Exit()
+        public void Exit() =>
+            TileMonoContainer.OnTileSelected -= TileSelected;
+
+        private void SwapTiles(IPromise swapTilesPromise)
         {
             TileMonoContainer.OnTileSelected -= TileSelected;
+            swapTilesPromise.Then(() => _stateMachine.Enter<GameAnimationState>());
         }
 
-        private void TileSelected(ITile tile)
-        {
+        private void TileSelected(ITile tile) =>
             _gameController.UserSelectTile(tile);
-        }
     }
 }

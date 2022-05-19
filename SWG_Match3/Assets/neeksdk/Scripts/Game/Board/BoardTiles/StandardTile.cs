@@ -1,4 +1,5 @@
 using neeksdk.Scripts.Game.Board.BoardTiles.TileBehaviour;
+using UnityEngine;
 
 namespace neeksdk.Scripts.Game.Board.BoardTiles
 {
@@ -6,9 +7,11 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles
     {
         public StandardTile(TileType tileType, TileMonoContainer monoContainer) : base(tileType, monoContainer)
         {
-            _moveBehaviour = new MoveBehaviour();
+            Transform transform = monoContainer.transform;
+            
+            _moveBehaviour = new MoveBehaviour(transform);
             _collectBehaviour = new CollectBehaviour();
-            _selectBehaviour = new SelectBehaviour(monoContainer.transform);
+            _selectBehaviour = new SelectBehaviour(transform);
         }
     }
 }

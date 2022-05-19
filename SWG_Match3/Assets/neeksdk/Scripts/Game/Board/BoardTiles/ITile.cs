@@ -8,6 +8,7 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles
     {
         IPromise ShowUp(bool withAnimation = true);
         void Move(TileMoveDirections moveDirection);
+        IPromise Move(BoardCoords boardCoords);
         void Select();
         void Deselect();
         void Cleanup();
