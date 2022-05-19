@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using neeksdk.Scripts.Game;
 using neeksdk.Scripts.Game.Board;
+using neeksdk.Scripts.Game.GameUIView;
 using neeksdk.Scripts.Infrastructure.Factory;
 using neeksdk.Scripts.Infrastructure.Pool;
 using neeksdk.Scripts.Infrastructure.Services;
@@ -17,6 +18,7 @@ namespace neeksdk.Scripts.Infrastructure.DIInstallers
     {
         [SerializeField] private ObjectPool _objectPool;
         [SerializeField] private BoardController _boardController;
+        [SerializeField] private GameUiView _gameUiView;
         
         public override void InstallBindings()
         {
@@ -24,6 +26,7 @@ namespace neeksdk.Scripts.Infrastructure.DIInstallers
             
             BindServices();
             BindStateMachine();
+            BindUI();
             Container.BindInterfacesAndSelfTo<GameController>().AsSingle();
         }
         
@@ -39,6 +42,11 @@ namespace neeksdk.Scripts.Infrastructure.DIInstallers
             Container.BindInterfacesAndSelfTo<TileAnimationService>().AsSingle();
         }
 
+        private void BindUI()
+        {
+            Container.BindInterfacesAndSelfTo<GameUiView>().FromInstance(_gameUiView).AsSingle();
+        }
+
         private void BindStateMachine()
         {
             Container.BindInterfacesAndSelfTo<StateMachine>().AsSingle();
@@ -50,6 +58,7 @@ namespace neeksdk.Scripts.Infrastructure.DIInstallers
             Container.BindInterfacesAndSelfTo<LoadingState>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameSelectionState>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameAnimationState>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GameGenerateNewTilesState>().AsSingle();
         }
 
         private Dictionary<Type, IExitableState> GetStateMachineStates()
@@ -58,7 +67,8 @@ namespace neeksdk.Scripts.Infrastructure.DIInstallers
             {
                 [typeof(LoadingState)] = Container.Resolve<LoadingState>(),
                 [typeof(GameSelectionState)] = Container.Resolve<GameSelectionState>(),
-                [typeof(GameAnimationState)] = Container.Resolve<GameAnimationState>()
+                [typeof(GameAnimationState)] = Container.Resolve<GameAnimationState>(),
+                [typeof(GameGenerateNewTilesState)] = Container.Resolve<GameGenerateNewTilesState>()
             };
         }
 

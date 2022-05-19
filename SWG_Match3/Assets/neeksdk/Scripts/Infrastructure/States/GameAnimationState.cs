@@ -6,13 +6,11 @@ namespace neeksdk.Scripts.Infrastructure.States
     public class GameAnimationState : IState
     {
         private readonly StateMachine _stateMachine;
-        private readonly BoardController _boardController;
         private readonly TileAnimationService _tileAnimationService;
 
-        public GameAnimationState(StateMachine stateMachine, BoardController boardController, TileAnimationService tileAnimationService)
+        public GameAnimationState(StateMachine stateMachine, TileAnimationService tileAnimationService)
         {
             _stateMachine = stateMachine;
-            _boardController = boardController;
             _tileAnimationService = tileAnimationService;
         }
         
@@ -22,9 +20,9 @@ namespace neeksdk.Scripts.Infrastructure.States
             {
                 _stateMachine.Enter<GameSelectionState>();
                 return;
-            }   
-            
-            
+            }
+
+            _tileAnimationService.PlayCollectTileAnimations().Then(() => _stateMachine.Enter<GameGenerateNewTilesState>());
         }
 
         public void Exit()

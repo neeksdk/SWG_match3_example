@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using neeksdk.Scripts.Extensions;
 using neeksdk.Scripts.Game.Board.BoardTiles;
 
@@ -15,6 +16,7 @@ namespace neeksdk.Scripts.Game.Board
         public bool FindMatchedTiles(BoardTileData boardTileData, BoardSearchPattern searchPattern, out List<BoardTileData> matchedTiles)
         {
             matchedTiles = new List<BoardTileData>();
+            matchedTiles.Add(boardTileData);
             TileType tileType = boardTileData.Tile.TileType;
             BoardCoords coords = boardTileData.Coords;
             switch (searchPattern)
@@ -27,14 +29,16 @@ namespace neeksdk.Scripts.Game.Board
                     CheckTileForMatchRecursively(tileType, coords.Row, coords.Col + 1, ref matchedTiles, 0, 1);
                     CheckTileForMatchRecursively(tileType, coords.Row, coords.Col - 1, ref matchedTiles, 0, -1);
                     break;
-                case BoardSearchPattern.Both:
-                    CheckTileForMatchRecursively(tileType, coords.Row + 1, coords.Col, ref matchedTiles, 1, 0);
-                    CheckTileForMatchRecursively(tileType, coords.Row - 1, coords.Col, ref matchedTiles, -1, 0);
-                    CheckTileForMatchRecursively(tileType, coords.Row, coords.Col + 1, ref matchedTiles, 0, 1);
-                    CheckTileForMatchRecursively(tileType, coords.Row, coords.Col - 1, ref matchedTiles, 0, -1);
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(searchPattern), searchPattern, null);
+            }
+
+            if (matchedTiles.Count >= 3)
+            {
+                foreach (BoardTileData matchedTile in matchedTiles)
+                {
+                    matchedTile.Tile.TileMonoContainer.transform.DOScale(0.5f, 0.5f);
+                }
             }
 
             return matchedTiles.Count >= 3;
@@ -42,7 +46,7 @@ namespace neeksdk.Scripts.Game.Board
 
         public bool FindMatchesCountBeforeTileSwap(BoardTileData target, BoardTileData destination, out BoardSearchPattern matchPattern)
         {
-            matchPattern = BoardSearchPattern.Both;
+            matchPattern = BoardSearchPattern.Horizontal;
             
             BoardTileData targetTile = target;
             BoardTileData destinationTile = destination;
@@ -76,6 +80,8 @@ namespace neeksdk.Scripts.Game.Board
                 matchedTiles.Add(nextTile);
                 row += incrementRow;
                 col += incrementCol;
+                
+                return CheckTileForMatchRecursively(matchedType, row, col, ref matchedTiles, incrementRow, incrementCol);
             }
         }
     }

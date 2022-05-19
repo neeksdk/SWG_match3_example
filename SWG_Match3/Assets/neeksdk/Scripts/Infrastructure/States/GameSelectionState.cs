@@ -68,20 +68,32 @@ namespace neeksdk.Scripts.Infrastructure.States
             BoardTileData fromTileData = _boardController.GetBoardTileData(fromTile);
             BoardTileData toTileData = _boardController.GetBoardTileData(toTile);
 
-            bool hasFromMatchedTiles = _boardController.BoardMatcher.FindMatchedTiles(fromTileData, BoardSearchPattern.Both, out List<BoardTileData> intersectingFromTiles);
-            bool hasToMatchedTiles = _boardController.BoardMatcher.FindMatchedTiles(toTileData, BoardSearchPattern.Both, out List<BoardTileData> intersectingToTiles);
+            bool hasFromMatchedTilesHorizontal = _boardController.BoardMatcher.FindMatchedTiles(fromTileData, BoardSearchPattern.Horizontal, out List<BoardTileData> matchingFromTilesHorizontal);
+            bool hasFromMatchedTilesVertical = _boardController.BoardMatcher.FindMatchedTiles(fromTileData, BoardSearchPattern.Vertical, out List<BoardTileData> matchingFromTilesVertical);
+            bool hasToMatchedTilesHorizontal = _boardController.BoardMatcher.FindMatchedTiles(toTileData, BoardSearchPattern.Horizontal, out List<BoardTileData> matchingToTilesHorizontal);
+            bool hasToMatchedTilesVertical = _boardController.BoardMatcher.FindMatchedTiles(toTileData, BoardSearchPattern.Vertical, out List<BoardTileData> matchingToTilesVertical);
 
-            if (hasFromMatchedTiles)
+            if (hasFromMatchedTilesHorizontal)
             {
-                _tileAnimationService.AddAnimationsToQueue(intersectingFromTiles);
+                _tileAnimationService.AddAnimationsToQueue(matchingFromTilesHorizontal);
             }
 
-            if (hasToMatchedTiles)
+            if (hasFromMatchedTilesVertical)
             {
-                _tileAnimationService.AddAnimationsToQueue(intersectingToTiles);
+                _tileAnimationService.AddAnimationsToQueue(matchingFromTilesVertical);
+            }
+            
+            if (hasToMatchedTilesHorizontal)
+            {
+                _tileAnimationService.AddAnimationsToQueue(matchingToTilesHorizontal);
+            }
+            
+            if (hasToMatchedTilesVertical)
+            {
+                _tileAnimationService.AddAnimationsToQueue(matchingToTilesVertical);
             }
 
-            return hasFromMatchedTiles || hasToMatchedTiles;
+            return hasFromMatchedTilesHorizontal || hasFromMatchedTilesVertical || hasToMatchedTilesHorizontal || hasToMatchedTilesVertical;
         }
 
 

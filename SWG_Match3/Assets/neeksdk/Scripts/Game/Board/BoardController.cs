@@ -29,16 +29,19 @@ namespace neeksdk.Scripts.Game.Board
             toTile.Deselect();
             
             BoardTileData fromTileData = this.GetBoardTileData(fromTile);
-            BoardCoords fromCoords = fromTileData.Coords;
             BoardTileData toTileData = this.GetBoardTileData(toTile);
+            BoardCoords fromCoords = fromTileData.Coords;
             BoardCoords toCoords = toTileData.Coords;
-            
+
             return Promise.All(fromTile.Move(toTile.Coords), toTile.Move(fromTile.Coords)).Then(() =>
             {
-                fromTileData.Tile = toTile;
-                fromTileData.Coords = toCoords;
-                toTileData.Tile = fromTile;
-                toTileData.Coords = fromCoords;
+                BoardTileData[fromTile.Coords.Row, fromTile.Coords.Col].Coords = toCoords;
+                BoardTileData[fromTile.Coords.Row, fromTile.Coords.Col].Tile.Coords = toCoords;
+
+                BoardTileData[toTile.Coords.Row, toTile.Coords.Col].Coords = fromCoords;
+                BoardTileData[toTile.Coords.Row, toTile.Coords.Col].Tile.Coords = fromCoords;
+                
+                (BoardTileData[fromTile.Coords.Row, fromTile.Coords.Col], BoardTileData[toTile.Coords.Row, toTile.Coords.Col]) = (BoardTileData[toTile.Coords.Row, toTile.Coords.Col], BoardTileData[fromTile.Coords.Row, fromTile.Coords.Col]);
             });
         }
 
