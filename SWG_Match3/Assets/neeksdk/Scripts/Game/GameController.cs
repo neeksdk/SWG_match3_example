@@ -12,7 +12,7 @@ namespace neeksdk.Scripts.Game
         
         private ITile _firstTileSelected;
 
-        public Action<IPromise> OnSwapTiles;
+        public Action<ITile, ITile> OnSwapTiles;
 
         public GameController(BoardController boardController) =>
             _boardController = boardController;
@@ -42,7 +42,7 @@ namespace neeksdk.Scripts.Game
                 return;
             }
 
-            OnSwapTiles(_boardController.SwapTiles(_firstTileSelected, tile));
+            OnSwapTiles(_firstTileSelected, tile);
         }
     }   
 }

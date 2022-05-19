@@ -12,8 +12,8 @@ namespace neeksdk.Scripts.Game.Board
 
         private BackgroundTileGenerator _backgroundTileGenerator;
         private TileGenerator _tileGenerator;
-        private BoardMatcher _boardMatcher;
-
+        
+        public BoardMatcher BoardMatcher { get; private set; }
         public BoardTileData[,] BoardTileData { get; private set; }
         public BoardData BoardData { get; private set; }
 
@@ -28,7 +28,18 @@ namespace neeksdk.Scripts.Game.Board
             fromTile.Deselect();
             toTile.Deselect();
             
-            return Promise.All(fromTile.Move(toTile.Coords), toTile.Move(fromTile.Coords));
+            BoardTileData fromTileData = this.GetBoardTileData(fromTile);
+            BoardCoords fromCoords = fromTileData.Coords;
+            BoardTileData toTileData = this.GetBoardTileData(toTile);
+            BoardCoords toCoords = toTileData.Coords;
+            
+            return Promise.All(fromTile.Move(toTile.Coords), toTile.Move(fromTile.Coords)).Then(() =>
+            {
+                fromTileData.Tile = toTile;
+                fromTileData.Coords = toCoords;
+                toTileData.Tile = fromTile;
+                toTileData.Coords = fromCoords;
+            });
         }
 
         public void ShuffleBoard() =>
@@ -56,7 +67,7 @@ namespace neeksdk.Scripts.Game.Board
         {
             _backgroundTileGenerator = new BackgroundTileGenerator();
             _tileGenerator = new TileGenerator();
-            _boardMatcher = new BoardMatcher(this);
+            BoardMatcher = new BoardMatcher(this);
         }
 
         private IPromise GenerateLevel() =>

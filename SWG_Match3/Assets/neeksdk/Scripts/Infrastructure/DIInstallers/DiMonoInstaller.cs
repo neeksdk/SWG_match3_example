@@ -5,6 +5,7 @@ using neeksdk.Scripts.Game;
 using neeksdk.Scripts.Game.Board;
 using neeksdk.Scripts.Infrastructure.Factory;
 using neeksdk.Scripts.Infrastructure.Pool;
+using neeksdk.Scripts.Infrastructure.Services;
 using neeksdk.Scripts.Infrastructure.States;
 using neeksdk.Scripts.StaticData;
 using UnityEngine;
@@ -35,6 +36,7 @@ namespace neeksdk.Scripts.Infrastructure.DIInstallers
             Container.BindInterfacesAndSelfTo<TileFactory>().AsSingle();
             Container.BindInterfacesAndSelfTo<ObjectPool>().FromInstance(_objectPool).AsSingle();
             Container.BindInterfacesAndSelfTo<BoardController>().FromInstance(_boardController).AsSingle();
+            Container.BindInterfacesAndSelfTo<TileAnimationService>().AsSingle();
         }
 
         private void BindStateMachine()

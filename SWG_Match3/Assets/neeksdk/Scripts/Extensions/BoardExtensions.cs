@@ -1,5 +1,6 @@
 using neeksdk.Scripts.Game.Board;
 using neeksdk.Scripts.Game.Board.BoardTiles;
+using neeksdk.Scripts.StaticData;
 using UnityEngine;
 
 namespace neeksdk.Scripts.Extensions
@@ -44,5 +45,8 @@ namespace neeksdk.Scripts.Extensions
 
             return false;
         }
+
+        public static BoardTileData GetBoardTileData(this BoardController boardController, ITile tile) =>
+            boardController.BoardTileData[tile.Coords.Row, tile.Coords.Col];
     }
 }

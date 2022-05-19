@@ -40,7 +40,7 @@ namespace neeksdk.Scripts.Game.Board
             return matchedTiles.Count >= 3;
         }
 
-        public bool FindMatchesCountAfterTileSwap(BoardTileData target, BoardTileData destination, out BoardSearchPattern matchPattern)
+        public bool FindMatchesCountBeforeTileSwap(BoardTileData target, BoardTileData destination, out BoardSearchPattern matchPattern)
         {
             matchPattern = BoardSearchPattern.Both;
             
