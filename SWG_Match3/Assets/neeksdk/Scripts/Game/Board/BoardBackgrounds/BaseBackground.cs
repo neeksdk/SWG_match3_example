@@ -7,7 +7,6 @@ namespace neeksdk.Scripts.Game.Board.BoardBackgrounds
         private readonly BackgroundMonoContainer _backgroundMonoContainer;
         
         public BackgroundType BackgroundType { get; }
-        public IBackground Tile { get; set; }
 
         protected BaseBackground(BackgroundType backgroundType, BackgroundMonoContainer backgroundMonoContainer)
         {

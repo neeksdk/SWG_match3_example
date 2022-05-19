@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace neeksdk.Scripts.Game.Board.BoardTiles
@@ -6,9 +7,21 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles
     {
         private ITile _tile;
 
+        public static Action<ITile> OnTileSelected;
+
         public ITile Tile => _tile;
 
         public void SetupTile(ITile tile) =>
             _tile = tile;
+
+        private void OnMouseDown()
+        {
+            if (_tile == null)
+            {
+                return;
+            }
+            
+            OnTileSelected?.Invoke(_tile);
+        }
     }
 }

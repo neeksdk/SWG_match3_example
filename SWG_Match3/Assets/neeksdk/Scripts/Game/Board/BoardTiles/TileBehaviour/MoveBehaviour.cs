@@ -6,5 +6,10 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles.TileBehaviour
         {
             
         }
+
+        public void Clear()
+        {
+            
+        }
     }
 }

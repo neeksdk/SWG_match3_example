@@ -10,7 +10,7 @@ namespace neeksdk.Scripts.Extensions
             row >= 0 && row < boardData.Rows && col >= 0 && col < boardData.Cols;
         
         public static Vector3 BoardToVectorCoords(this BoardTileData boardTileData) =>
-            new Vector3(boardTileData.Row, boardTileData.Col, 0);
+            new Vector3(boardTileData.Coords.Row, boardTileData.Coords.Col, 0);
 
         public static TileType TileType(this BoardTileData boardTileData) =>
             boardTileData.Tile.TileType;

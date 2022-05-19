@@ -5,8 +5,7 @@ namespace neeksdk.Scripts.Game.Board
 {
     public class BoardTileData
     {
-        public int Row;
-        public int Col;
+        public BoardCoords Coords;
         public BackgroundType BackgroundType;
         public IBackground Background;
         public ITile Tile;

@@ -1,8 +1,9 @@
 namespace neeksdk.Scripts.Game.Board.BoardTiles.TileBehaviour
 {
-    public interface IMovable
+    public interface ISelectable
     {
-        void Move(TileMoveDirections direction);
+        void Select();
+        void Deselect();
         void Clear();
     }
 }

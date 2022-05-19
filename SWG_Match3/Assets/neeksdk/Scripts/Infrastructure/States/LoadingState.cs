@@ -1,8 +1,8 @@
-using neeksdk.Scripts.Game;
 using neeksdk.Scripts.Game.Board;
 using neeksdk.Scripts.Game.Board.BoardTiles;
 using neeksdk.Scripts.Infrastructure.Factory;
 using neeksdk.Scripts.Infrastructure.Pool;
+using UnityEngine;
 
 namespace neeksdk.Scripts.Infrastructure.States
 {
@@ -21,20 +21,23 @@ namespace neeksdk.Scripts.Infrastructure.States
         
         public void Enter()
         {
-            TileType[] tileTypes = new TileType[] {TileType.Fire, TileType.Leaf, TileType.Lighting, TileType.Water};
-            _objectPool.InitializePool(36, _tileFactory, tileTypes);
-            _boardController.SetupLevel(new BoardData()
-            {
-                Rows = 6, 
-                Cols = 6, 
-                EmptyTiles = 3, 
-                TileTypes = tileTypes
-            });
+            BoardData levelData = GetLevelData();
+            _objectPool.InitializePool(36, _tileFactory, levelData.TileTypes);
+            _boardController.SetupLevel(levelData).Then(() => Debug.Log(" --- loading completed"));
         }
 
         public void Exit()
         {
             
         }
+
+        private BoardData GetLevelData() =>
+            new BoardData()
+            {
+                Rows = 6,
+                Cols = 6,
+                EmptyTiles = 3,
+                TileTypes = new TileType[] {TileType.Fire, TileType.Leaf, TileType.Lighting, TileType.Water}
+            };
     }
 }

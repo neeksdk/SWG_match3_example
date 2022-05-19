@@ -1,18 +1,21 @@
 using neeksdk.Scripts.Extensions;
 using neeksdk.Scripts.Game.Board.BoardBackgrounds;
+using RSG;
 using UnityEngine;
 
 namespace neeksdk.Scripts.Game.Board
 {
     public class BackgroundTileGenerator
     {
-        public void GenerateBackground(BoardData boardData, Transform transform, out BoardTileData[,] boardTileData)
+        public IPromise<BoardTileData[,]> GenerateBackground(BoardData boardData, Transform transform)
         {
-            boardTileData = new BoardTileData[boardData.Rows, boardData.Cols];
+            BoardTileData[,] boardTileData = new BoardTileData[boardData.Rows, boardData.Cols];
             
             PopulateBoardData(boardData, boardTileData);
             AddEmptyTiles(boardData, boardTileData);
             PopulateBackgroundTiles(boardTileData, transform);
+
+            return Promise<BoardTileData[,]>.Resolved(boardTileData);
         }
 
         private void PopulateBoardData(BoardData boardData, BoardTileData[,] boardTileData)
@@ -23,8 +26,11 @@ namespace neeksdk.Scripts.Game.Board
                 {
                     boardTileData[i, j] = new BoardTileData()
                     {
-                        Row = i,
-                        Col = j,
+                        Coords = new BoardCoords()
+                        {
+                            Row = i,
+                            Col = j
+                        },
                         BackgroundType = BackgroundType.Standard
                     };
                 }

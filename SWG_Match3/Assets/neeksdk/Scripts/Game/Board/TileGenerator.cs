@@ -1,24 +1,28 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using neeksdk.Scripts.Extensions;
 using neeksdk.Scripts.Game.Board.BoardBackgrounds;
 using neeksdk.Scripts.Game.Board.BoardTiles;
+using RSG;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace neeksdk.Scripts.Game.Board
 {
     public class TileGenerator
     {
-        public void GenerateTiles(BoardData boardData, BoardTileData[,] boardTileData, Transform transform)
+        public IPromise GenerateTiles(BoardData boardData, BoardTileData[,] boardTileData, Transform transform)
         {
             BoardTileData left2;
             BoardTileData left1;
             BoardTileData down2;
             BoardTileData down1;
 
-            for (int i = 0; i < boardData.Rows; i++)
+            List<Func<IPromise>> promises = new List<Func<IPromise>>();
+            for (int j = 0; j < boardData.Cols; j++)
             {
-                for (int j = 0; j < boardData.Cols; j++)
+                for (int i = 0; i < boardData.Rows; i++)
                 {
                     BoardTileData generateTileData = boardTileData[i, j];
 
@@ -48,10 +52,17 @@ namespace neeksdk.Scripts.Game.Board
                             allowedTileTypes.Remove(down2.TileType());
                         }
                     }
-                    
-                    GenerateTile(generateTileData, allowedTileTypes, transform);
+
+                    ITile tile = GenerateTile(generateTileData, allowedTileTypes, transform);
+                    if (tile != null)
+                    {
+                        Func<IPromise> promise = new Func<IPromise>(() => tile.ShowUp());
+                        promises.Add(promise);
+                    }
                 }
             }
+
+            return Promise.Sequence(promises);
         }
 
         public void ShuffleBoard(BoardTileData[,] boardTileData)
@@ -59,16 +70,22 @@ namespace neeksdk.Scripts.Game.Board
             //todo: implement board shuffle
         }
 
-        private void GenerateTile(BoardTileData boardTileData, List<TileType> allowedTileTypes, Transform transform)
+        private ITile GenerateTile(BoardTileData boardTileData, List<TileType> allowedTileTypes, Transform transform)
         {
             int randomIndex = Random.Range(0, allowedTileTypes.Count);
             TileType randomTileType = allowedTileTypes[randomIndex];
 
-            if (randomTileType.Spawn(transform, out ITile tile, boardTileData.BoardToVectorCoords()))
+            if (!randomTileType.Spawn(transform, out ITile tile, boardTileData.BoardToVectorCoords()))
             {
-                boardTileData.Tile = tile;
-                tile.GameObject.SetActive(true);
+                return null;
             }
+            
+            boardTileData.Tile = tile;
+            tile.Coords = boardTileData.Coords;
+            tile.GameObject.transform.localScale = Vector3.zero;
+            tile.GameObject.SetActive(true);
+
+            return tile;
         }
     }
 }
