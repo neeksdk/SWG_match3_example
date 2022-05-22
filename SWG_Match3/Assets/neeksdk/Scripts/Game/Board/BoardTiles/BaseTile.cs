@@ -41,9 +41,6 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles
             return promise;
         }
 
-        public void Move(TileMoveDirections moveDirection) =>
-            _moveBehaviour.Move(moveDirection);
-
         public IPromise Move(BoardCoords boardCoords) =>
             _moveBehaviour.Move(boardCoords).Then(() => Coords = boardCoords);
 
@@ -56,7 +53,7 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles
         public void Collect() =>
             _collectBehaviour.Collect();
 
-        public void Cleanup()
+        public void Clear()
         {
             _selectBehaviour.Clear();
             _moveBehaviour.Clear();

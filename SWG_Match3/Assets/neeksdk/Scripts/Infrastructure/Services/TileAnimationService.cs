@@ -12,18 +12,16 @@ namespace neeksdk.Scripts.Infrastructure.Services
     public class TileAnimationService
     {
         private readonly GameUiView _gameUiView;
-        private readonly Queue<List<BoardTileData>> _animationQueue = new Queue<List<BoardTileData>>();
+        private readonly Queue<List<BoardTileData>> _completeAnimationQueue = new Queue<List<BoardTileData>>();
 
-        public TileAnimationService(GameUiView gameUiView)
-        {
+        public TileAnimationService(GameUiView gameUiView) =>
             _gameUiView = gameUiView;
-        }
 
         public void AddAnimationsToQueue(List<BoardTileData> animatedTiles) =>
-            _animationQueue.Enqueue(animatedTiles);
+            _completeAnimationQueue.Enqueue(animatedTiles);
 
         public bool HasAnimations() =>
-            _animationQueue.Count > 0;
+            _completeAnimationQueue.Count > 0;
 
         public IPromise PlayCollectTileAnimations()
         {
@@ -35,9 +33,9 @@ namespace neeksdk.Scripts.Infrastructure.Services
             Vector3 scorePosition = Camera.main.ScreenToWorldPoint(_gameUiView.ScorePosition);
             List<IPromise> promises = new List<IPromise>();
 
-            while (_animationQueue.Count != 0)
+            while (_completeAnimationQueue.Count != 0)
             {
-                List<BoardTileData> boardTileDataList = _animationQueue.Dequeue();
+                List<BoardTileData> boardTileDataList = _completeAnimationQueue.Dequeue();
                 int scorePerTile = 5;
                 int scoreForFirstTile = 4;
                 int scoreForSecondAndThirdTile = 3;

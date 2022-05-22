@@ -13,11 +13,6 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles.TileBehaviour
         public MoveBehaviour(Transform transform) =>
             _transform = transform;
 
-        public void Move(TileMoveDirections direction)
-        {
-            
-        }
-
         public IPromise Move(BoardCoords boardCoords)
         {
             Promise promise = new Promise();

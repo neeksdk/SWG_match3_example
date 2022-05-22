@@ -1,8 +1,7 @@
 namespace neeksdk.Scripts.Game.Board.BoardTiles.TileBehaviour
 {
-    public interface ICollectable
+    public interface ICollectable : IBehaviourClearable
     {
         void Collect();
-        void Clear();
     }
 }
