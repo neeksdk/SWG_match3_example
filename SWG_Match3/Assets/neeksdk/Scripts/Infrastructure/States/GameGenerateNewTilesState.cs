@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using neeksdk.Scripts.Game.Board;
 using neeksdk.Scripts.Infrastructure.Services;
 using RSG;
+using UnityEngine;
 
 namespace neeksdk.Scripts.Infrastructure.States
 {
@@ -34,7 +35,7 @@ namespace neeksdk.Scripts.Infrastructure.States
                 return;
             }
 
-            MoveTilesOnBoard(movedTiles).Then(() => _stateMachine.Enter<CheckMatchedTilesState>());
+            MoveTilesOnBoard(movedTiles).Then(() => _stateMachine.Enter<CheckMatchedTilesState>()).Done();
         }
         
         private IPromise MoveTilesOnBoard(List<BoardTileData> movedTiles)

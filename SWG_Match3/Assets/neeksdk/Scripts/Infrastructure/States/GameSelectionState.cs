@@ -4,6 +4,7 @@ using neeksdk.Scripts.Game;
 using neeksdk.Scripts.Game.Board;
 using neeksdk.Scripts.Game.Board.BoardTiles;
 using neeksdk.Scripts.Infrastructure.Services;
+using UnityEngine;
 
 namespace neeksdk.Scripts.Infrastructure.States
 {
@@ -74,22 +75,22 @@ namespace neeksdk.Scripts.Infrastructure.States
 
             if (hasFromMatchedTilesHorizontal)
             {
-                _tileAnimationService.AddAnimationsToQueue(matchingFromTilesHorizontal);
+                _tileAnimationService.AddCollectAnimationsToQueue(matchingFromTilesHorizontal);
             }
 
             if (hasFromMatchedTilesVertical)
             {
-                _tileAnimationService.AddAnimationsToQueue(matchingFromTilesVertical);
+                _tileAnimationService.AddCollectAnimationsToQueue(matchingFromTilesVertical);
             }
             
             if (hasToMatchedTilesHorizontal)
             {
-                _tileAnimationService.AddAnimationsToQueue(matchingToTilesHorizontal);
+                _tileAnimationService.AddCollectAnimationsToQueue(matchingToTilesHorizontal);
             }
             
             if (hasToMatchedTilesVertical)
             {
-                _tileAnimationService.AddAnimationsToQueue(matchingToTilesVertical);
+                _tileAnimationService.AddCollectAnimationsToQueue(matchingToTilesVertical);
             }
 
             return hasFromMatchedTilesHorizontal || hasFromMatchedTilesVertical || hasToMatchedTilesHorizontal || hasToMatchedTilesVertical;

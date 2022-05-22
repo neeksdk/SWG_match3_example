@@ -17,11 +17,14 @@ namespace neeksdk.Scripts.Infrastructure.Services
         public TileAnimationService(GameUiView gameUiView) =>
             _gameUiView = gameUiView;
 
-        public void AddAnimationsToQueue(List<BoardTileData> animatedTiles) =>
+        public void AddCollectAnimationsToQueue(List<BoardTileData> animatedTiles) =>
             _completeAnimationQueue.Enqueue(animatedTiles);
 
         public bool HasAnimations() =>
             _completeAnimationQueue.Count > 0;
+
+        public void ClearCollectAnimationQueue() =>
+            _completeAnimationQueue.Clear();
 
         public IPromise PlayCollectTileAnimations()
         {
@@ -88,9 +91,9 @@ namespace neeksdk.Scripts.Infrastructure.Services
         private IPromise GetAnimationPromise(AnimationTileData animationTileData, Vector3 scorePosition, float delay)
         {
             Promise promise = new Promise();
+            animationTileData.Transform.DOKill();
             DOVirtual.DelayedCall(delay, () =>
             {
-                animationTileData.Transform.DOKill();
                 Sequence animationSequence = DOTween.Sequence();
                 animationSequence.Append(animationTileData.Transform.DOMove(scorePosition, TileConstants.TILE_MOVE_ANIMATION_DURATION)
                     .SetEase(Ease.OutSine)

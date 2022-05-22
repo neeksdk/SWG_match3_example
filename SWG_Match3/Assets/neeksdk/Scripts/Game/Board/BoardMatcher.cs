@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using neeksdk.Scripts.Extensions;
+using neeksdk.Scripts.Game.Board.BoardBackgrounds;
 using neeksdk.Scripts.Game.Board.BoardTiles;
 
 namespace neeksdk.Scripts.Game.Board
@@ -12,6 +13,15 @@ namespace neeksdk.Scripts.Game.Board
 
         public BoardMatcher(BoardController boardController) =>
             _boardController = boardController;
+
+        public bool TryToFindMatchesOnAllBoard(out List<BoardTileData> matchedTiles)
+        {
+            matchedTiles = new List<BoardTileData>();
+            FindMatchesInRows(matchedTiles);
+            FindMatchesInCols(matchedTiles);
+            
+            return matchedTiles.Count > 0;
+        }
 
         public bool FindMatchedTiles(BoardTileData boardTileData, BoardSearchPattern searchPattern, out List<BoardTileData> matchedTiles)
         {
@@ -44,24 +54,6 @@ namespace neeksdk.Scripts.Game.Board
             return matchedTiles.Count >= 3;
         }
 
-        public bool FindMatchesCountBeforeTileSwap(BoardTileData target, BoardTileData destination, out BoardSearchPattern matchPattern)
-        {
-            matchPattern = BoardSearchPattern.Horizontal;
-            
-            BoardTileData targetTile = target;
-            BoardTileData destinationTile = destination;
-
-            _boardController.BoardTileData[target.Coords.Row, target.Coords.Col] = destination;
-            _boardController.BoardTileData[destination.Coords.Row, destination.Coords.Col] = target;
-            
-            //todo: check if match occurs
-            
-            _boardController.BoardTileData[target.Coords.Row, target.Coords.Col] = target;
-            _boardController.BoardTileData[destination.Coords.Row, destination.Coords.Col] = destination;
-
-            return false;
-        }
-
         private bool CheckTileForMatchRecursively(TileType matchedType, int row, int col, ref List<BoardTileData> matchedTiles, int incrementRow, int incrementCol)
         {
             while (true)
@@ -83,6 +75,73 @@ namespace neeksdk.Scripts.Game.Board
                 
                 return CheckTileForMatchRecursively(matchedType, row, col, ref matchedTiles, incrementRow, incrementCol);
             }
+        }
+        
+        private void FindMatchesInRows(List<BoardTileData> matchedTiles)
+        {
+            TileType findingTileType = TileType.Fire;
+            List<BoardTileData> findingMatches = new List<BoardTileData>();
+            for (int i = 0; i < _boardController.BoardData.Rows; i++)
+            {
+                findingMatches.Clear();
+                for (int j = 0; j < _boardController.BoardData.Cols; j++)
+                {
+                    findingTileType = FindingMatchedTiles(matchedTiles, findingMatches, findingTileType, i, j);
+                }
+            }
+        }
+        
+        private void FindMatchesInCols(List<BoardTileData> matchedTiles)
+        {
+            TileType findingTileType = TileType.Fire;
+            List<BoardTileData> findingMatches = new List<BoardTileData>();
+            for (int j = 0; j < _boardController.BoardData.Cols; j++)
+            {
+                findingMatches.Clear();
+                for (int i = 0; i < _boardController.BoardData.Rows; i++)
+                {
+                    findingTileType = FindingMatchedTiles(matchedTiles, findingMatches, findingTileType, i, j);
+                }
+            }
+        }
+
+        private TileType FindingMatchedTiles(List<BoardTileData> matchedTiles, List<BoardTileData> findingMatches, TileType findingTileType, int i, int j)
+        {
+            BoardTileData tileData = _boardController.BoardTileData[i, j];
+            if (tileData.BackgroundType == BackgroundType.Empty)
+            {
+                if (findingMatches.Count >= 3)
+                {
+                    matchedTiles.AddRange(findingMatches);
+                }
+                
+                findingMatches.Clear();
+                return findingTileType;
+            }
+
+            if (findingMatches.Count == 0)
+            {
+                findingTileType = tileData.TileType();
+                findingMatches.Add(tileData);
+                return findingTileType;
+            }
+
+            if (findingTileType == tileData.TileType())
+            {
+                findingMatches.Add(tileData);
+                return findingTileType;
+            }
+
+            if (findingMatches.Count >= 3)
+            {
+                matchedTiles.AddRange(findingMatches);
+            }
+
+            findingMatches.Clear();
+            findingTileType = tileData.TileType();
+            findingMatches.Add(tileData);
+            
+            return findingTileType;
         }
     }
 }
