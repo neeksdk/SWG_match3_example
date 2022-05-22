@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using neeksdk.Scripts.Game.Board;
 using neeksdk.Scripts.Infrastructure.Services;
-using UnityEngine;
 
 namespace neeksdk.Scripts.Infrastructure.States
 {

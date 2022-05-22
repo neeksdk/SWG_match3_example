@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using neeksdk.Scripts.Game.Board.BoardTiles.TileBehaviour;
 using RSG;
@@ -50,8 +51,8 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles
         public void Deselect() =>
             _selectBehaviour.Deselect();
 
-        public void Collect() =>
-            _collectBehaviour.Collect();
+        public IPromise Collect(Vector3 scorePosition, Action onComplete) =>
+            _collectBehaviour.Collect(scorePosition, onComplete);
 
         public void Clear()
         {

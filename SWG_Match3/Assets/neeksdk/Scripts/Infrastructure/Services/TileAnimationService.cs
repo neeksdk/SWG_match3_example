@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using DG.Tweening;
-using neeksdk.Scripts.Constants;
+using System.Linq;
 using neeksdk.Scripts.Extensions;
 using neeksdk.Scripts.Game.Board;
+using neeksdk.Scripts.Game.Board.BoardTiles;
 using neeksdk.Scripts.Game.GameUIView;
 using RSG;
 using UnityEngine;
@@ -38,7 +38,7 @@ namespace neeksdk.Scripts.Infrastructure.Services
 
             while (_completeAnimationQueue.Count != 0)
             {
-                List<BoardTileData> boardTileDataList = _completeAnimationQueue.Dequeue();
+                List<BoardTileData> boardTileDataList = _completeAnimationQueue.Dequeue().Distinct().ToList();
                 int scorePerTile = 5;
                 int scoreForFirstTile = 4;
                 int scoreForSecondAndThirdTile = 3;
@@ -46,21 +46,24 @@ namespace neeksdk.Scripts.Infrastructure.Services
                 for (int i = 0; i < boardTileDataList.Count; i++)
                 {
                     BoardTileData boardTileData = boardTileDataList[i];
-                    AnimationTileData animationTileData = new AnimationTileData()
+                    ITile tile = boardTileData.Tile;
+                    if (tile == null)
                     {
-                        Transform = boardTileData.Tile.TileMonoContainer.transform,
-                        Score = i == 0 ? scoreForFirstTile : i < 3 ? scoreForSecondAndThirdTile : scorePerTile
-                    };
-
-                    promises.Add(GetAnimationPromise(animationTileData, scorePosition, TileConstants.TILE_SELECTION_ANIMATION_DELAY * i)
-                        .Then(() =>
-                        {
-                            boardTileData.Tile.Recycle();
-                            boardTileData.Tile = null;
-                        }));
+                        continue;
+                    }
+                    
+                    int score = i == 0 ? scoreForFirstTile : i < 3 ? scoreForSecondAndThirdTile : scorePerTile;
+                    promises.Add(boardTileData.Tile.Collect(scorePosition, () =>
+                    {
+                        _gameUiView.AnimateScorePoints(score);
+                    }).Then(() =>
+                    {
+                        boardTileData.Tile.Recycle();
+                        boardTileData.Tile = null;
+                    }));
                 }
             }
-
+            
             return Promise.All(promises);
         }
 
@@ -85,25 +88,7 @@ namespace neeksdk.Scripts.Infrastructure.Services
                 animationPromises.Add(boardTileData.Tile.Move(newPosition));
             }
 
-            return Promise.All(animationPromises).Then(Promise.Resolved);
-        }
-
-        private IPromise GetAnimationPromise(AnimationTileData animationTileData, Vector3 scorePosition, float delay)
-        {
-            Promise promise = new Promise();
-            animationTileData.Transform.DOKill();
-            DOVirtual.DelayedCall(delay, () =>
-            {
-                Sequence animationSequence = DOTween.Sequence();
-                animationSequence.Append(animationTileData.Transform.DOMove(scorePosition, TileConstants.TILE_MOVE_ANIMATION_DURATION)
-                    .SetEase(Ease.OutSine)
-                    .OnComplete(() => _gameUiView.AnimateScorePoints(animationTileData.Score)));
-                animationSequence.Append(animationTileData.Transform.DOScale(Vector3.zero, TileConstants.TILE_MOVE_ANIMATION_DURATION)
-                    .SetEase(Ease.OutSine));
-                animationSequence.OnComplete(() => promise.Resolve());
-            });
-            
-            return promise;
+            return Promise.All(animationPromises);
         }
     }
 }

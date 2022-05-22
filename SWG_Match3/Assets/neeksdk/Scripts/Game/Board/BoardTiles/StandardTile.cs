@@ -10,7 +10,7 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles
             Transform transform = monoContainer.transform;
             
             _moveBehaviour = new MoveBehaviour(transform);
-            _collectBehaviour = new CollectBehaviour();
+            _collectBehaviour = new CollectBehaviour(transform);
             _selectBehaviour = new SelectBehaviour(transform);
         }
     }

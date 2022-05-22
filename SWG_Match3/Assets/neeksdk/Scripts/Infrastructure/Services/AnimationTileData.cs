@@ -1,10 +1,11 @@
+using neeksdk.Scripts.Game.Board;
 using UnityEngine;
 
 namespace neeksdk.Scripts.Infrastructure.Services
 {
-    public class AnimationTileData
+    public struct AnimationTileData
     {
-        public Transform Transform;
+        public BoardTileData BoardTileData;
         public int Score;
     }
 }

@@ -38,6 +38,7 @@ namespace neeksdk.Scripts.Extensions
                 return false;
             }
             
+            tile.Clear();
             ObjectPool.Instance.Recycle(tile.TileMonoContainer);
             return true;
         }

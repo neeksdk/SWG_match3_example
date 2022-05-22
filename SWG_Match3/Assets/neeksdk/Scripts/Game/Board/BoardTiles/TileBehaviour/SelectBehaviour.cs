@@ -6,10 +6,10 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles.TileBehaviour
 {
     public class SelectBehaviour : ISelectable
     {
-        private Transform _targetTransform;
+        private readonly Transform _targetTargetTransform;
         private Sequence _selectionTween;
-        public SelectBehaviour(Transform transform) =>
-            _targetTransform = transform;
+        public SelectBehaviour(Transform targetTransform) =>
+            _targetTargetTransform = targetTransform;
 
         public void Select()
         {
@@ -19,8 +19,8 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles.TileBehaviour
             }
             
             _selectionTween = DOTween.Sequence();
-            _selectionTween.Append(_targetTransform.DOScale(TileConstants.TILE_SELECTION_SCALE, TileConstants.TILE_SELECTION_ANIMATION_DURATION)).SetEase(Ease.OutSine);
-            _selectionTween.Append(_targetTransform.DOScale(Vector3.one, TileConstants.TILE_SELECTION_ANIMATION_DURATION)).SetEase(Ease.InSine);
+            _selectionTween.Append(_targetTargetTransform.DOScale(TileConstants.TILE_SELECTION_SCALE, TileConstants.TILE_SELECTION_ANIMATION_DURATION)).SetEase(Ease.OutSine);
+            _selectionTween.Append(_targetTargetTransform.DOScale(Vector3.one, TileConstants.TILE_SELECTION_ANIMATION_DURATION)).SetEase(Ease.InSine);
             _selectionTween.SetLoops(-1);
             _selectionTween.Play();
         }
@@ -37,7 +37,7 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles.TileBehaviour
 
         public void Clear()
         {
-            if (_selectionTween == null)
+            if (_selectionTween == null || !_selectionTween.IsPlaying())
             {
                 return;
             }

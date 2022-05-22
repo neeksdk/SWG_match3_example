@@ -1,7 +1,11 @@
+using System;
+using RSG;
+using UnityEngine;
+
 namespace neeksdk.Scripts.Game.Board.BoardTiles.TileBehaviour
 {
     public interface ICollectable : IBehaviourClearable
     {
-        void Collect();
+        IPromise Collect(Vector3 scorePosition, Action onComplete);
     }
 }

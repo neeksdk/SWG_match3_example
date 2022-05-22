@@ -4,7 +4,6 @@ using neeksdk.Scripts.Game;
 using neeksdk.Scripts.Game.Board;
 using neeksdk.Scripts.Game.Board.BoardTiles;
 using neeksdk.Scripts.Infrastructure.Services;
-using UnityEngine;
 
 namespace neeksdk.Scripts.Infrastructure.States
 {

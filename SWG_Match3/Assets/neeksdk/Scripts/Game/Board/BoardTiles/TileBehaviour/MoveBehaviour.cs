@@ -8,21 +8,26 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles.TileBehaviour
 {
     public class MoveBehaviour : IMovable
     {
-        private readonly Transform _transform;
+        private readonly Transform _targetTransform;
 
-        public MoveBehaviour(Transform transform) =>
-            _transform = transform;
+        public MoveBehaviour(Transform targetTransform) =>
+            _targetTransform = targetTransform;
 
         public IPromise Move(BoardCoords boardCoords)
         {
             Promise promise = new Promise();
-            _transform.DOMove(boardCoords.BoardToVectorCoords(), TileConstants.TILE_MOVE_ANIMATION_DURATION)
+            _targetTransform.DOMove(boardCoords.BoardToVectorCoords(), TileConstants.TILE_MOVE_ANIMATION_DURATION)
                 .SetEase(Ease.Linear).OnComplete(promise.Resolve);
 
             return promise;
         }
 
-        public void Clear() =>
-            _transform.DOKill();
+        public void Clear()
+        {
+            if (_targetTransform != null)
+            {
+                _targetTransform.DOKill();
+            }
+        }
     }
 }
