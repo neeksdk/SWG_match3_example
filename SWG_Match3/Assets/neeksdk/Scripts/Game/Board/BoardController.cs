@@ -11,6 +11,7 @@ namespace neeksdk.Scripts.Game.Board
     public class BoardController : MonoBehaviour
     {
         [SerializeField] private Transform _backgroundsTransform;
+        [SerializeField] private Transform _tileGenerationContainersTransform;
         [SerializeField] private Transform _tilesTransform;
 
         private BackgroundTileGenerator _backgroundTileGenerator;
@@ -97,7 +98,7 @@ namespace neeksdk.Scripts.Game.Board
         }
 
         private IPromise GenerateLevel() =>
-            _backgroundTileGenerator.GenerateBackground(BoardData, _backgroundsTransform).Then(boardTileData =>
+            _backgroundTileGenerator.GenerateBackground(BoardData, _backgroundsTransform, _tileGenerationContainersTransform).Then(boardTileData =>
             {
                 BoardTileData = boardTileData;
                 return _tileGenerator.GenerateAllLevelTiles(BoardData, BoardTileData, _tilesTransform);
@@ -107,12 +108,17 @@ namespace neeksdk.Scripts.Game.Board
         {
             for (int i = 0; i < emptyTilesCount; i++)
             {
-                ITile newTile = _tileGenerator.GenerateNewTile(BoardData.TileTypes.ToList(), _tilesTransform, new BoardCoords() {Row = row, Col = -(i + 1)});
+                BoardCoords initialTilePosition = new BoardCoords() {Row = row, Col = -1};
+                ITile newTile = _tileGenerator.GenerateNewTile(BoardData.TileTypes.ToList(), _tilesTransform, initialTilePosition.BoardToVectorCoords());
 
-                if (newTile != null)
+                if (newTile == null)
                 {
-                    filledTiles.Add(newTile);
+                    continue;
                 }
+                
+                initialTilePosition.Col = -(i + 1);
+                newTile.Coords = initialTilePosition;
+                filledTiles.Add(newTile);
             }
         }
 

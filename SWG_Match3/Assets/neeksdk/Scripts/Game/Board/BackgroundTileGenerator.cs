@@ -7,13 +7,14 @@ namespace neeksdk.Scripts.Game.Board
 {
     public class BackgroundTileGenerator
     {
-        public IPromise<BoardTileData[,]> GenerateBackground(BoardData boardData, Transform transform)
+        public IPromise<BoardTileData[,]> GenerateBackground(BoardData boardData, Transform backgroundTransform, Transform tileGenerationContainerTransform)
         {
             BoardTileData[,] boardTileData = new BoardTileData[boardData.Rows, boardData.Cols];
             
             PopulateBoardData(boardData, boardTileData);
             AddEmptyTiles(boardData, boardTileData);
-            PopulateBackgroundTiles(boardTileData, transform);
+            AddTileGenerationContainers(boardData, tileGenerationContainerTransform);
+            PopulateBackgroundTiles(boardTileData, backgroundTransform);
 
             return Promise<BoardTileData[,]>.Resolved(boardTileData);
         }
@@ -51,6 +52,21 @@ namespace neeksdk.Scripts.Game.Board
 
                 boardTileData[randomRow, randomCol].BackgroundType = BackgroundType.Empty;
                 index -= 1;
+            }
+        }
+        
+        private void AddTileGenerationContainers(BoardData boardData, Transform tileGenerationContainerTransform)
+        {
+            for (int i = 0; i < boardData.Rows; i++)
+            {
+                BoardCoords containerPosition = new BoardCoords() {Row = i, Col = -1};
+                BackgroundType containerType = BackgroundType.Empty;
+                if (!containerType.Spawn(tileGenerationContainerTransform, out IBackground background, containerPosition.BoardToVectorCoords()))
+                {
+                    continue;
+                }
+                
+                background.GameObject.SetActive(true);
             }
         }
 

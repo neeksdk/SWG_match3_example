@@ -60,17 +60,16 @@ namespace neeksdk.Scripts.Game.Board
             return Promise.Sequence(promises);
         }
 
-        public ITile GenerateNewTile(List<TileType> allowedTileTypes, Transform transform, BoardCoords initialCoords)
+        public ITile GenerateNewTile(List<TileType> allowedTileTypes, Transform transform, Vector3 initialPsition)
         {
             int randomIndex = Random.Range(0, allowedTileTypes.Count);
             TileType randomTileType = allowedTileTypes[randomIndex];
             
-            if (!randomTileType.Spawn(transform, out ITile newTile, initialCoords.BoardToVectorCoords()))
+            if (!randomTileType.Spawn(transform, out ITile newTile, initialPsition))
             {
                 return null;
             }
             
-            newTile.Coords = initialCoords;
             newTile.GameObject.transform.localScale = Vector3.one;
             newTile.GameObject.SetActive(true);
             

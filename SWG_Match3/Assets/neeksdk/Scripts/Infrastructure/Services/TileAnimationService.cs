@@ -84,8 +84,15 @@ namespace neeksdk.Scripts.Infrastructure.Services
                 {
                     newPosition.Col += newPosition.Col < finalPosition.Col ? 1 : -1;
                 }
-                
-                animationPromises.Add(boardTileData.Tile.Move(newPosition));
+
+                if (newPosition.Row < 0 || newPosition.Col < 0)
+                {
+                    boardTileData.Tile.Coords = newPosition;
+                }
+                else
+                {
+                    animationPromises.Add(boardTileData.Tile.Move(newPosition));
+                }
             }
 
             return Promise.All(animationPromises);
