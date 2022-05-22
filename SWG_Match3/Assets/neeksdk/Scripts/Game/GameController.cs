@@ -2,7 +2,6 @@ using System;
 using neeksdk.Scripts.Extensions;
 using neeksdk.Scripts.Game.Board;
 using neeksdk.Scripts.Game.Board.BoardTiles;
-using RSG;
 
 namespace neeksdk.Scripts.Game
 {

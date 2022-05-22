@@ -53,6 +53,7 @@ namespace neeksdk.Scripts.Infrastructure.Pool
 
             TileMonoContainer monoContainer = _tileGoPool[tileType].Dequeue();
             GameObject go = monoContainer.gameObject;
+            go.name = $"[{position.x}, {position.y}] tile";
             go.transform.SetParent(parent);
             go.transform.position = position;
             go.transform.rotation = rotation;

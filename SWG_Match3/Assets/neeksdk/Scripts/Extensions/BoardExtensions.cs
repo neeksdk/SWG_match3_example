@@ -1,6 +1,5 @@
 using neeksdk.Scripts.Game.Board;
 using neeksdk.Scripts.Game.Board.BoardTiles;
-using neeksdk.Scripts.StaticData;
 using UnityEngine;
 
 namespace neeksdk.Scripts.Extensions

@@ -57,8 +57,9 @@ namespace neeksdk.Scripts.Infrastructure.DIInstallers
         {
             Container.BindInterfacesAndSelfTo<LoadingState>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameSelectionState>().AsSingle();
-            Container.BindInterfacesAndSelfTo<GameAnimationState>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GameCollectRewardState>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameGenerateNewTilesState>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CheckMatchedTilesState>().AsSingle();
         }
 
         private Dictionary<Type, IExitableState> GetStateMachineStates()
@@ -67,8 +68,9 @@ namespace neeksdk.Scripts.Infrastructure.DIInstallers
             {
                 [typeof(LoadingState)] = Container.Resolve<LoadingState>(),
                 [typeof(GameSelectionState)] = Container.Resolve<GameSelectionState>(),
-                [typeof(GameAnimationState)] = Container.Resolve<GameAnimationState>(),
-                [typeof(GameGenerateNewTilesState)] = Container.Resolve<GameGenerateNewTilesState>()
+                [typeof(GameCollectRewardState)] = Container.Resolve<GameCollectRewardState>(),
+                [typeof(GameGenerateNewTilesState)] = Container.Resolve<GameGenerateNewTilesState>(),
+                [typeof(CheckMatchedTilesState)] = Container.Resolve<CheckMatchedTilesState>()
             };
         }
 

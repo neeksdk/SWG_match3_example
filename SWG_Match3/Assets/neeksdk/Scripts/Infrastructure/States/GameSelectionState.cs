@@ -4,7 +4,6 @@ using neeksdk.Scripts.Game;
 using neeksdk.Scripts.Game.Board;
 using neeksdk.Scripts.Game.Board.BoardTiles;
 using neeksdk.Scripts.Infrastructure.Services;
-using RSG;
 
 namespace neeksdk.Scripts.Infrastructure.States
 {
@@ -54,7 +53,7 @@ namespace neeksdk.Scripts.Infrastructure.States
             {
                 if (CheckMatchedTiles(fromTile, toTile))
                 {
-                    _stateMachine.Enter<GameAnimationState>();
+                    _stateMachine.Enter<GameCollectRewardState>();
                 }
                 else
                 {

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using neeksdk.Scripts.Constants;
+using neeksdk.Scripts.Extensions;
 using neeksdk.Scripts.Game.Board;
 using neeksdk.Scripts.Game.GameUIView;
 using RSG;
@@ -36,24 +37,54 @@ namespace neeksdk.Scripts.Infrastructure.Services
 
             while (_animationQueue.Count != 0)
             {
-                List<BoardTileData> boardTileData = _animationQueue.Dequeue();
+                List<BoardTileData> boardTileDataList = _animationQueue.Dequeue();
                 int scorePerTile = 5;
                 int scoreForFirstTile = 4;
                 int scoreForSecondAndThirdTile = 3;
                 
-                for (int i = 0; i < boardTileData.Count; i++)
+                for (int i = 0; i < boardTileDataList.Count; i++)
                 {
+                    BoardTileData boardTileData = boardTileDataList[i];
                     AnimationTileData animationTileData = new AnimationTileData()
                     {
-                        Transform = boardTileData[i].Tile.TileMonoContainer.transform,
+                        Transform = boardTileData.Tile.TileMonoContainer.transform,
                         Score = i == 0 ? scoreForFirstTile : i < 3 ? scoreForSecondAndThirdTile : scorePerTile
                     };
 
-                    promises.Add(GetAnimationPromise(animationTileData, scorePosition, TileConstants.TILE_SELECTION_ANIMATION_DELAY * i));
+                    promises.Add(GetAnimationPromise(animationTileData, scorePosition, TileConstants.TILE_SELECTION_ANIMATION_DELAY * i)
+                        .Then(() =>
+                        {
+                            boardTileData.Tile.Recycle();
+                            boardTileData.Tile = null;
+                        }));
                 }
             }
 
             return Promise.All(promises);
+        }
+
+        public IPromise MoveTilesOnBoard(List<BoardTileData> animatedTiles)
+        {
+            List<IPromise> animationPromises = new List<IPromise>();
+            foreach (BoardTileData boardTileData in animatedTiles)
+            {
+                BoardCoords newPosition = boardTileData.Tile.Coords;
+                BoardCoords finalPosition = boardTileData.Coords;
+                
+                if (finalPosition.Row != newPosition.Row)
+                {
+                    newPosition.Row += newPosition.Row < finalPosition.Row ? 1 : -1;
+                }
+                
+                if (finalPosition.Col != newPosition.Col)
+                {
+                    newPosition.Col += newPosition.Col < finalPosition.Col ? 1 : -1;
+                }
+                
+                animationPromises.Add(boardTileData.Tile.Move(newPosition));
+            }
+
+            return Promise.All(animationPromises).Then(Promise.Resolved);
         }
 
         private IPromise GetAnimationPromise(AnimationTileData animationTileData, Vector3 scorePosition, float delay)

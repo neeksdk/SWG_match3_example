@@ -22,14 +22,12 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles.TileBehaviour
         {
             Promise promise = new Promise();
             _transform.DOMove(boardCoords.BoardToVectorCoords(), TileConstants.TILE_MOVE_ANIMATION_DURATION)
-                .SetEase(Ease.OutSine).OnComplete(promise.Resolve);
+                .SetEase(Ease.Linear).OnComplete(promise.Resolve);
 
             return promise;
         }
 
-        public void Clear()
-        {
-            
-        }
+        public void Clear() =>
+            _transform.DOKill();
     }
 }

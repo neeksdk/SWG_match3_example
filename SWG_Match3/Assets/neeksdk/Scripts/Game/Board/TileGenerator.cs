@@ -12,13 +12,8 @@ namespace neeksdk.Scripts.Game.Board
 {
     public class TileGenerator
     {
-        public IPromise GenerateTiles(BoardData boardData, BoardTileData[,] boardTileData, Transform transform)
+        public IPromise GenerateAllLevelTiles(BoardData boardData, BoardTileData[,] boardTileData, Transform transform)
         {
-            BoardTileData left2;
-            BoardTileData left1;
-            BoardTileData down2;
-            BoardTileData down1;
-
             List<Func<IPromise>> promises = new List<Func<IPromise>>();
             for (int j = 0; j < boardData.Cols; j++)
             {
@@ -32,10 +27,10 @@ namespace neeksdk.Scripts.Game.Board
                     }
 
                     List<TileType> allowedTileTypes = boardData.TileTypes.ToList();
-                    left2 = i >= 2 ? boardTileData[i - 2, j] : null;
-                    left1 = i >= 1 ? boardTileData[i - 1, j] : null;
-                    down2 = j >= 2 ? boardTileData[i, j - 2] : null;
-                    down1 = j >= 1 ? boardTileData[i, j - 1] : null;
+                    BoardTileData left2 = i >= 2 ? boardTileData[i - 2, j] : null;
+                    BoardTileData left1 = i >= 1 ? boardTileData[i - 1, j] : null;
+                    BoardTileData down2 = j >= 2 ? boardTileData[i, j - 2] : null;
+                    BoardTileData down1 = j >= 1 ? boardTileData[i, j - 1] : null;
 
                     if (left2 != null && left1 != null && left2.BackgroundType != BackgroundType.Empty && left1.BackgroundType != BackgroundType.Empty)
                     {
@@ -53,7 +48,7 @@ namespace neeksdk.Scripts.Game.Board
                         }
                     }
 
-                    ITile tile = GenerateTile(generateTileData, allowedTileTypes, transform);
+                    ITile tile = GenerateTileForBoardData(generateTileData, allowedTileTypes, transform);
                     if (tile != null)
                     {
                         Func<IPromise> promise = new Func<IPromise>(() => tile.ShowUp());
@@ -65,12 +60,29 @@ namespace neeksdk.Scripts.Game.Board
             return Promise.Sequence(promises);
         }
 
+        public ITile GenerateNewTile(List<TileType> allowedTileTypes, Transform transform, BoardCoords initialCoords)
+        {
+            int randomIndex = Random.Range(0, allowedTileTypes.Count);
+            TileType randomTileType = allowedTileTypes[randomIndex];
+            
+            if (!randomTileType.Spawn(transform, out ITile newTile, initialCoords.BoardToVectorCoords()))
+            {
+                return null;
+            }
+            
+            newTile.Coords = initialCoords;
+            newTile.GameObject.transform.localScale = Vector3.one;
+            newTile.GameObject.SetActive(true);
+            
+            return newTile;
+        }
+        
         public void ShuffleBoard(BoardTileData[,] boardTileData)
         {
             //todo: implement board shuffle
         }
 
-        private ITile GenerateTile(BoardTileData boardTileData, List<TileType> allowedTileTypes, Transform transform)
+        private ITile GenerateTileForBoardData(BoardTileData boardTileData, List<TileType> allowedTileTypes, Transform transform)
         {
             int randomIndex = Random.Range(0, allowedTileTypes.Count);
             TileType randomTileType = allowedTileTypes[randomIndex];
