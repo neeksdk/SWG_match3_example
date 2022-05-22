@@ -57,7 +57,7 @@ namespace neeksdk.Scripts.Infrastructure.States
                 }
                 else
                 {
-                    Subscribe();
+                    _boardController.SwapTiles(fromTile, toTile).Then(Subscribe);
                 }
             });
         }
