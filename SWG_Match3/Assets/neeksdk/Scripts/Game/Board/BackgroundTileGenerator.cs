@@ -57,11 +57,11 @@ namespace neeksdk.Scripts.Game.Board
         
         private void AddTileGenerationContainers(BoardData boardData, Transform tileGenerationContainerTransform)
         {
+            BackgroundType containerType = BackgroundType.Empty;
             for (int i = 0; i < boardData.Rows; i++)
             {
-                BoardCoords containerPosition = new BoardCoords() {Row = i, Col = -1};
-                BackgroundType containerType = BackgroundType.Empty;
-                if (!containerType.Spawn(tileGenerationContainerTransform, out IBackground background, containerPosition.BoardToVectorCoords()))
+                Vector3 containerPosition = new BoardCoords() {Row = i, Col = -1}.BoardToVectorCoords();
+                if (!containerType.Spawn(tileGenerationContainerTransform, out IBackground background, containerPosition))
                 {
                     continue;
                 }

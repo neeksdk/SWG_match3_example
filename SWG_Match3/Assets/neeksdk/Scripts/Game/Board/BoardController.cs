@@ -106,18 +106,18 @@ namespace neeksdk.Scripts.Game.Board
         
         private void GenerateNewTiles(int row, List<ITile> filledTiles, int emptyTilesCount)
         {
+            Vector3 initialTilePosition = new BoardCoords() {Row = row, Col = -1}.BoardToVectorCoords();
+            List<TileType> allowedTiles = BoardData.TileTypes.ToList();
             for (int i = 0; i < emptyTilesCount; i++)
             {
-                BoardCoords initialTilePosition = new BoardCoords() {Row = row, Col = -1};
-                ITile newTile = _tileGenerator.GenerateNewTile(BoardData.TileTypes.ToList(), _tilesTransform, initialTilePosition.BoardToVectorCoords());
+                ITile newTile = _tileGenerator.GenerateNewTile(allowedTiles, _tilesTransform, initialTilePosition);
 
                 if (newTile == null)
                 {
                     continue;
                 }
                 
-                initialTilePosition.Col = -(i + 1);
-                newTile.Coords = initialTilePosition;
+                newTile.Coords = new BoardCoords() { Row = row, Col = -(i + 1)};
                 filledTiles.Add(newTile);
             }
         }
