@@ -35,6 +35,7 @@ namespace neeksdk.Scripts.Infrastructure.Services
 
             Vector3 scorePosition = Camera.main.ScreenToWorldPoint(_gameUiView.ScorePosition);
             List<IPromise> promises = new List<IPromise>();
+            int scoreIndex = 0;
 
             while (_completeAnimationQueue.Count > 0)
             {
@@ -42,7 +43,7 @@ namespace neeksdk.Scripts.Infrastructure.Services
                 int scorePerTile = 5;
                 int scoreForFirstTile = 4;
                 int scoreForSecondAndThirdTile = 3;
-                
+
                 for (int i = 0; i < boardTileDataList.Count; i++)
                 {
                     BoardTileData boardTileData = boardTileDataList[i];
@@ -53,7 +54,8 @@ namespace neeksdk.Scripts.Infrastructure.Services
                     }
 
                     boardTileData.Tile = null;
-                    int score = i == 0 ? scoreForFirstTile : i < 3 ? scoreForSecondAndThirdTile : scorePerTile;
+                    int score = scoreIndex == 0 ? scoreForFirstTile : scoreIndex < 3 ? scoreForSecondAndThirdTile : scorePerTile;
+                    scoreIndex += 1;
                     promises.Add(tile.Collect(scorePosition, () =>
                     {
                         _gameUiView.AnimateScorePoints(score);
