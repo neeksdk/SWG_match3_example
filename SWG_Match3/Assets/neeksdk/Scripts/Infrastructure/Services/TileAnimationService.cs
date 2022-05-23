@@ -51,16 +51,13 @@ namespace neeksdk.Scripts.Infrastructure.Services
                     {
                         continue;
                     }
-                    
+
+                    boardTileData.Tile = null;
                     int score = i == 0 ? scoreForFirstTile : i < 3 ? scoreForSecondAndThirdTile : scorePerTile;
-                    promises.Add(boardTileData.Tile.Collect(scorePosition, () =>
+                    promises.Add(tile.Collect(scorePosition, () =>
                     {
                         _gameUiView.AnimateScorePoints(score);
-                    }).Then(() =>
-                    {
-                        boardTileData.Tile.Recycle();
-                        boardTileData.Tile = null;
-                    }));
+                    }).Then(() => tile.Recycle()));
                 }
             }
             

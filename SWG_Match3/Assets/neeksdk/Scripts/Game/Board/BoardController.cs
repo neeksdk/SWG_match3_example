@@ -128,7 +128,7 @@ namespace neeksdk.Scripts.Game.Board
             {
                 BoardTileData currentTileData = BoardTileData[row, col];
 
-                if (currentTileData.BackgroundType == BackgroundType.Empty)
+                if (currentTileData == null || currentTileData.BackgroundType == BackgroundType.Empty)
                 {
                     continue;
                 }

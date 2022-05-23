@@ -5,23 +5,21 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles
 {
     public class TileMonoContainer : MonoBehaviour
     {
-        private ITile _tile;
-
         public static Action<ITile> OnTileSelected;
 
-        public ITile Tile => _tile;
+        public ITile Tile { get; private set; }
 
         public void SetupTile(ITile tile) =>
-            _tile = tile;
+            Tile = tile;
 
         private void OnMouseDown()
         {
-            if (_tile == null)
+            if (Tile == null)
             {
                 return;
             }
             
-            OnTileSelected?.Invoke(_tile);
+            OnTileSelected?.Invoke(Tile);
         }
     }
 }

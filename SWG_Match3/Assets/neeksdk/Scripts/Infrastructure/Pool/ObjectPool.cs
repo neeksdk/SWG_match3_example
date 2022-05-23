@@ -19,7 +19,7 @@ namespace neeksdk.Scripts.Infrastructure.Pool
         {
             _tileFactory = tileFactory;
             int halfSize = initialSize / 2;
-            int tileOfEachTypeSize = initialSize / tileTypesForLevel.Length + 1;
+            int tileOfEachTypeSize = initialSize / tileTypesForLevel.Length + 5;
             int emptyTiles = 3;
             
             for (int i = 0; i < halfSize; i++)
@@ -60,7 +60,7 @@ namespace neeksdk.Scripts.Infrastructure.Pool
 
         public void Recycle(TileMonoContainer tile)
         {
-            if (tile == null || tile.gameObject == null)
+            if (tile == null)
             {
                 return;
             } 
@@ -86,7 +86,7 @@ namespace neeksdk.Scripts.Infrastructure.Pool
 
         public void Recycle(BackgroundMonoContainer background)
         {
-            if (background == null || background.gameObject == null)
+            if (background == null)
             {
                 return;
             } 
@@ -126,7 +126,7 @@ namespace neeksdk.Scripts.Infrastructure.Pool
 
         private void ReturnToPool(TileMonoContainer tile)
         {
-            if (!_tilePool.ContainsKey(tile.Tile.TileType))
+            if (tile.Tile == null || !_tilePool.ContainsKey(tile.Tile.TileType))
             {
                 Destroy(tile.gameObject);
                 return;
@@ -137,7 +137,7 @@ namespace neeksdk.Scripts.Infrastructure.Pool
 
         private void ReturnToPool(BackgroundMonoContainer background)
         {
-            if (!_backgroundPool.ContainsKey(background.Background.BackgroundType))
+            if (background == null || !_backgroundPool.ContainsKey(background.Background.BackgroundType))
             {
                 Destroy(background.gameObject);
                 return;

@@ -60,12 +60,12 @@ namespace neeksdk.Scripts.Game.Board
             return Promise.Sequence(promises);
         }
 
-        public ITile GenerateNewTile(List<TileType> allowedTileTypes, Transform transform, Vector3 initialPsition)
+        public ITile GenerateNewTile(List<TileType> allowedTileTypes, Transform transform, Vector3 initialPosition)
         {
             int randomIndex = Random.Range(0, allowedTileTypes.Count);
             TileType randomTileType = allowedTileTypes[randomIndex];
             
-            if (!randomTileType.Spawn(transform, out ITile newTile, initialPsition))
+            if (!randomTileType.Spawn(transform, out ITile newTile, initialPosition))
             {
                 return null;
             }
