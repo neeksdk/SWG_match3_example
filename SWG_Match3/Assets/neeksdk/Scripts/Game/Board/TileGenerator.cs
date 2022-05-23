@@ -76,9 +76,56 @@ namespace neeksdk.Scripts.Game.Board
             return newTile;
         }
         
-        public void ShuffleBoard(BoardTileData[,] boardTileData)
+        public void ShuffleBoard(int maxRows, int maxCols, BoardTileData[,] boardTileData)
         {
-            //todo: implement board shuffle
+            for (int i = 0; i < maxRows; i++)
+            {
+                for (int j = 0; j < maxCols; j++)
+                {
+                    BoardTileData fromTileData = boardTileData[i, j];
+                    ITile fromTile = fromTileData.Tile;
+                    if (fromTile == null || fromTileData.BackgroundType == BackgroundType.Empty)
+                    {
+                        continue;
+                    }
+
+                    if (!TryGetRandomTile(maxRows, maxCols, boardTileData, out BoardTileData toTileData))
+                    {
+                        continue;
+                    }
+
+                    ITile toTile = toTileData.Tile;
+
+                    BoardCoords fromCoords = fromTile.Coords;
+                    BoardCoords toCoords = toTile.Coords;
+
+                    fromTile.Coords = toCoords;
+                    toTile.Coords = fromCoords;
+
+                    fromTileData.Tile = toTile;
+                    toTileData.Tile = fromTile;
+                }
+            }
+        }
+
+        private bool TryGetRandomTile(int maxRows, int maxCols, BoardTileData[,] boardTileData, out BoardTileData randomTile)
+        {
+            randomTile = null;
+            int maxTryCount = 10;
+
+            for (int i = 0; i < maxTryCount; i++)
+            {
+                int randomRow = Random.Range(0, maxRows);
+                int randomCol = Random.Range(0, maxCols);
+                randomTile = boardTileData[randomRow, randomCol];
+                
+                if (randomTile != null && randomTile.BackgroundType != BackgroundType.Empty && randomTile.Tile != null)
+                {
+                    return true;
+                }
+            }
+            
+            return false;
         }
 
         private ITile GenerateTileForBoardData(BoardTileData boardTileData, List<TileType> allowedTileTypes, Transform transform)

@@ -3,6 +3,7 @@ using neeksdk.Scripts.Extensions;
 using neeksdk.Scripts.Game;
 using neeksdk.Scripts.Game.Board;
 using neeksdk.Scripts.Game.Board.BoardTiles;
+using neeksdk.Scripts.Game.GameUIView;
 using neeksdk.Scripts.Infrastructure.Services;
 
 namespace neeksdk.Scripts.Infrastructure.States
@@ -13,13 +14,16 @@ namespace neeksdk.Scripts.Infrastructure.States
         private readonly GameController _gameController;
         private readonly BoardController _boardController;
         private readonly TileAnimationService _tileAnimationService;
+        private readonly GameUiView _gameUiView;
 
-        public GameSelectionState(StateMachine stateMachine, GameController gameController, BoardController boardController, TileAnimationService tileAnimationService)
+        public GameSelectionState(StateMachine stateMachine, GameController gameController, 
+            BoardController boardController, TileAnimationService tileAnimationService, GameUiView gameUiView)
         {
             _stateMachine = stateMachine;
             _gameController = gameController;
             _boardController = boardController;
             _tileAnimationService = tileAnimationService;
+            _gameUiView = gameUiView;
         }
         
         public void Enter()
@@ -36,6 +40,8 @@ namespace neeksdk.Scripts.Infrastructure.States
         private void Subscribe()
         {
             _gameController.OnSwapTiles += SwapTiles;
+            _gameUiView.OnShuffleClick += ShuffleBoard;
+            _gameUiView.OnRestartClick += RestartGame;
             TileMonoContainer.OnTileSelected += TileSelected;
         }
 
@@ -43,6 +49,8 @@ namespace neeksdk.Scripts.Infrastructure.States
         {
             _gameController.ClearSelectionData();
             _gameController.OnSwapTiles -= SwapTiles;
+            _gameUiView.OnShuffleClick -= ShuffleBoard;
+            _gameUiView.OnRestartClick -= RestartGame;
             TileMonoContainer.OnTileSelected -= TileSelected;
         }
         
@@ -98,5 +106,11 @@ namespace neeksdk.Scripts.Infrastructure.States
 
         private void TileSelected(ITile tile) =>
             _gameController.UserSelectTile(tile);
+        
+        private void RestartGame() =>
+            _stateMachine.Enter<RestartState>();
+
+        private void ShuffleBoard() =>
+            _stateMachine.Enter<ShuffleBoardState>();
     }
 }

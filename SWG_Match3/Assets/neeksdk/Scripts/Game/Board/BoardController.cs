@@ -43,7 +43,7 @@ namespace neeksdk.Scripts.Game.Board
         }
 
         public void ShuffleBoard() =>
-            _tileGenerator.ShuffleBoard(BoardTileData);
+            _tileGenerator.ShuffleBoard(BoardData.Rows, BoardData.Cols, BoardTileData);
 
         public bool TryGetAllEmptyTiles(out List<BoardTileData> boardTileData)
         {
