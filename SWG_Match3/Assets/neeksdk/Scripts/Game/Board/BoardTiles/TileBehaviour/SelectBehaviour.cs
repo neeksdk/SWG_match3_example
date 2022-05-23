@@ -32,7 +32,8 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles.TileBehaviour
                 return;
             }
             
-            _selectionTween.Kill(true);
+            _selectionTween.Kill();
+            _targetTargetTransform.DOScale(Vector3.one, TileConstants.TILE_SELECTION_ANIMATION_DURATION).SetEase(Ease.InSine);
         }
 
         public void Clear()
