@@ -28,15 +28,15 @@ namespace neeksdk.Scripts.Infrastructure.Services
 
         public IPromise PlayCollectTileAnimations()
         {
-            if (Camera.main == null)
+            if (Camera.main == null || _completeAnimationQueue.Count == 0)
             {
                 return Promise.Resolved();
             }
-            
+
             Vector3 scorePosition = Camera.main.ScreenToWorldPoint(_gameUiView.ScorePosition);
             List<IPromise> promises = new List<IPromise>();
 
-            while (_completeAnimationQueue.Count != 0)
+            while (_completeAnimationQueue.Count > 0)
             {
                 List<BoardTileData> boardTileDataList = _completeAnimationQueue.Dequeue().Distinct().ToList();
                 int scorePerTile = 5;
