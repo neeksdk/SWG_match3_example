@@ -20,6 +20,7 @@ namespace neeksdk.Scripts.Infrastructure.Factory
         {
             TilePrefabData tilePrefabData = _staticDataService.ForTile(tileType);
             TileMonoContainer tileMonoContainer = Object.Instantiate(tilePrefabData.TilePrefab, parent);
+            tileMonoContainer.gameObject.name = tilePrefabData.Name;
             ITile tile = GetTile(tileType, tileMonoContainer);
             tileMonoContainer.SetupTile(tile);
 
