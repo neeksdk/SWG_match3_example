@@ -76,11 +76,14 @@ namespace neeksdk.Scripts.Game.Board
         {
             foreach (BoardTileData boardTileData in BoardTileData)
             {
-                if (!boardTileData.Tile.Recycle())
+                if (boardTileData.Tile != null)
                 {
-                    Destroy(boardTileData.Tile.GameObject);
+                    if (!boardTileData.Tile.Recycle())
+                    {
+                        Destroy(boardTileData.Tile.GameObject);
+                    }
                 }
-
+                
                 if (!boardTileData.Background.Recycle())
                 {
                     Destroy(boardTileData.Background.GameObject);

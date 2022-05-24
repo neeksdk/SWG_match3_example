@@ -25,6 +25,12 @@ namespace neeksdk.Scripts.Game.GameUIView
             _scoreText.text = _scores.ToString("0000");
         }
 
+        public void ResetScorePoints()
+        {
+            _scores = 0;
+            _scoreText.text = _scores.ToString("0000");
+        }
+
         private void Awake()
         {
             _shuffleButton.onClick.AddListener(ShuffleClick);
