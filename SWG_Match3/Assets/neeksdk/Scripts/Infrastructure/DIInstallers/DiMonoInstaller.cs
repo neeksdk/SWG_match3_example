@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using neeksdk.Scripts.Game;
-using neeksdk.Scripts.Game.Board;
+using neeksdk.Scripts.Game.Board.BoardControl;
 using neeksdk.Scripts.Game.GameUIView;
 using neeksdk.Scripts.Infrastructure.Factory;
 using neeksdk.Scripts.Infrastructure.Pool;

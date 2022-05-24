@@ -7,7 +7,6 @@ namespace neeksdk.Scripts.Infrastructure.States
     {
         private Dictionary<Type, IExitableState> _states;
         private IExitableState _activeState;
-        private IState _previousState;
 
         public void SetupStateMachine(Dictionary<Type, IExitableState> states) =>
             _states = states;
@@ -18,10 +17,6 @@ namespace neeksdk.Scripts.Infrastructure.States
         }
 
         private TState ChangeState<TState>() where TState : class, IExitableState {
-            if (_activeState is IState activeState) {
-                _previousState = activeState;
-            }
-            
             _activeState?.Exit();
             TState state = GetState<TState>();
             _activeState = state;

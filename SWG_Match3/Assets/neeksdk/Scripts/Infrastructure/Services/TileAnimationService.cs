@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using neeksdk.Scripts.Constants;
 using neeksdk.Scripts.Extensions;
 using neeksdk.Scripts.Game.Board;
 using neeksdk.Scripts.Game.Board.BoardTiles;
@@ -47,6 +48,7 @@ namespace neeksdk.Scripts.Infrastructure.Services
             Vector3 scorePosition = Camera.main.ScreenToWorldPoint(_gameUiView.ScorePosition);
             List<IPromise> promises = new List<IPromise>();
             int scoreIndex = 0;
+            float delayAnimation = 0;
 
             while (_completeAnimationQueue.Count > 0)
             {
@@ -64,10 +66,11 @@ namespace neeksdk.Scripts.Infrastructure.Services
                         continue;
                     }
 
+                    delayAnimation += TileConstants.TILE_SELECTION_ANIMATION_DELAY;
                     boardTileData.Tile = null;
                     int score = scoreIndex == 0 ? scoreForFirstTile : scoreIndex < 3 ? scoreForSecondAndThirdTile : scorePerTile;
                     scoreIndex += 1;
-                    promises.Add(tile.Collect(scorePosition, () =>
+                    promises.Add(tile.Collect(scorePosition, delayAnimation, () =>
                     {
                         _gameUiView.AnimateScorePoints(score);
                     }).Then(() => tile.Recycle()));

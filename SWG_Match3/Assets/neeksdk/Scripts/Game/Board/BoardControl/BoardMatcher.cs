@@ -5,7 +5,7 @@ using neeksdk.Scripts.Game.Board.BoardBackgrounds;
 using neeksdk.Scripts.Game.Board.BoardTiles;
 using neeksdk.Scripts.Game.Board.BoardTiles.TileBehaviour;
 
-namespace neeksdk.Scripts.Game.Board
+namespace neeksdk.Scripts.Game.Board.BoardControl
 {
     public class BoardMatcher
     {

@@ -3,7 +3,7 @@ using neeksdk.Scripts.Game.Board.BoardBackgrounds;
 using RSG;
 using UnityEngine;
 
-namespace neeksdk.Scripts.Game.Board
+namespace neeksdk.Scripts.Game.Board.BoardControl
 {
     public class BackgroundTileGenerator
     {

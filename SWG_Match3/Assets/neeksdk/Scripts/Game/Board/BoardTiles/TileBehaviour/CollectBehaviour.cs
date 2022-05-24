@@ -14,7 +14,7 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles.TileBehaviour
         public CollectBehaviour(Transform targetTransform) =>
             _targetTargetTransform = targetTransform;
 
-        public IPromise Collect(Vector3 scorePosition, Action onComplete)
+        public IPromise Collect(Vector3 scorePosition, float delayAnimation, Action onComplete)
         {
             if (_collectTween != null && _collectTween.IsPlaying())
             {
@@ -23,6 +23,7 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles.TileBehaviour
             
             Promise promise = new Promise();
             _collectTween = DOTween.Sequence();
+            _collectTween.Append(DOVirtual.DelayedCall(delayAnimation, () => { }));
             _collectTween.Append(_targetTargetTransform.DOMove(scorePosition, TileConstants.TILE_MOVE_ANIMATION_DURATION)
                 .SetEase(Ease.OutSine)
                 .OnComplete(() =>

@@ -51,8 +51,8 @@ namespace neeksdk.Scripts.Game.Board.BoardTiles
         public void Deselect() =>
             _selectBehaviour.Deselect();
 
-        public IPromise Collect(Vector3 scorePosition, Action onComplete) =>
-            _collectBehaviour.Collect(scorePosition, onComplete);
+        public IPromise Collect(Vector3 scorePosition, float delayAnimation, Action onComplete) =>
+            _collectBehaviour.Collect(scorePosition, delayAnimation, onComplete);
 
         public void Clear()
         {

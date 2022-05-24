@@ -8,7 +8,7 @@ using RSG;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace neeksdk.Scripts.Game.Board
+namespace neeksdk.Scripts.Game.Board.BoardControl
 {
     public class TileGenerator
     {

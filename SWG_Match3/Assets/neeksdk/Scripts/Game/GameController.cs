@@ -1,6 +1,6 @@
 using System;
 using neeksdk.Scripts.Extensions;
-using neeksdk.Scripts.Game.Board;
+using neeksdk.Scripts.Game.Board.BoardControl;
 using neeksdk.Scripts.Game.Board.BoardTiles;
 
 namespace neeksdk.Scripts.Game

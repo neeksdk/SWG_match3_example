@@ -20,9 +20,10 @@ namespace neeksdk.Scripts.Infrastructure.Factory
         {
             TilePrefabData tilePrefabData = _staticDataService.ForTile(tileType);
             TileMonoContainer tileMonoContainer = Object.Instantiate(tilePrefabData.TilePrefab, parent);
-            tileMonoContainer.SetupTile(new StandardTile(tileType, tileMonoContainer));
-            
-            return tileMonoContainer.Tile;
+            ITile tile = GetTile(tileType, tileMonoContainer);
+            tileMonoContainer.SetupTile(tile);
+
+            return tile;
         }
 
         public IBackground CreateStandardBackgroundTile(BackgroundType backgroundType, Transform parent)
@@ -33,5 +34,8 @@ namespace neeksdk.Scripts.Infrastructure.Factory
 
             return backgroundMonoContainer.Background;
         }
+
+        private ITile GetTile(TileType tileType, TileMonoContainer tileMonoContainer) =>
+            new StandardTile(tileType, tileMonoContainer);
     }
 }
