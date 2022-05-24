@@ -26,6 +26,17 @@ namespace neeksdk.Scripts.Infrastructure.Services
         public void ClearCollectAnimationQueue() =>
             _completeAnimationQueue.Clear();
 
+        public IPromise PlayShuffleTileAnimations(List<BoardTileData> tilesNeedToBeMoved)
+        {
+            List<IPromise> promises = new List<IPromise>();
+            foreach (BoardTileData boardTileData in tilesNeedToBeMoved)
+            {
+                promises.Add(boardTileData.Tile.Move(boardTileData.Coords));
+            }
+
+            return Promise.All(promises);
+        }
+        
         public IPromise PlayCollectTileAnimations()
         {
             if (Camera.main == null || _completeAnimationQueue.Count == 0)

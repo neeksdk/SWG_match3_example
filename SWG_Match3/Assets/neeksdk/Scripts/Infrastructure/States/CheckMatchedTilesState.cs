@@ -16,12 +16,20 @@ namespace neeksdk.Scripts.Infrastructure.States
             _boardController = boardController;
             _tileAnimationService = tileAnimationService;
         }
-        
+
         public void Enter()
         {
             if (!_boardController.BoardMatcher.TryToFindMatchesOnAllBoard(out List<BoardTileData> tileData))
             {
-                _stateMachine.Enter<GameSelectionState>();
+                if (_boardController.BoardMatcher.IsAvailableMovesOnBoard())
+                {
+                    _stateMachine.Enter<GameSelectionState>();
+                }
+                else
+                {
+                    _stateMachine.Enter<ShuffleBoardState>();
+                }
+                
                 return;
             }
 

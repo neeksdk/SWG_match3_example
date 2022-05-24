@@ -95,13 +95,6 @@ namespace neeksdk.Scripts.Game.Board
                     }
 
                     ITile toTile = toTileData.Tile;
-
-                    BoardCoords fromCoords = fromTile.Coords;
-                    BoardCoords toCoords = toTile.Coords;
-
-                    fromTile.Coords = toCoords;
-                    toTile.Coords = fromCoords;
-
                     fromTileData.Tile = toTile;
                     toTileData.Tile = fromTile;
                 }
